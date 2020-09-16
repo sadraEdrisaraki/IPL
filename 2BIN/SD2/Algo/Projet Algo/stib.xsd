@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="tram" />
+			<xs:enumeration value="metro" />
+			<xs:enumeration value="bus" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="stop">
+		<xs:restriction base="xs:ID">
+			<xs:pattern value="s.*" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="stib">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="stations">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="station" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="stop" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="stop">
+														<xs:attribute name="longitude"
+															type="xs:double" />
+														<xs:attribute name="latitude"
+															type="xs:double" />
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="nom" type="xs:string"
+										use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="lignes">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ligne" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="troncon" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:attribute name="depart" type="xs:IDREF"
+													use="required" />
+												<xs:attribute name="arrivee" type="xs:IDREF"
+													use="required" />
+												<xs:attribute name="duree" type="xs:positiveInteger"
+													use="required" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="nom" type="xs:string"
+										use="required" />
+									<xs:attribute name="source" type="xs:string"
+										use="required" />
+									<xs:attribute name="destination" type="xs:string"
+										use="required" />
+									<xs:attribute name="type" type="type"
+										use="required" />
+									<xs:attribute name="attenteMoyenne" type="xs:nonNegativeInteger"
+										use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

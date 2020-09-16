@@ -1,0 +1,74 @@
+/* mettre par défaut toutes les marges intérieures et extérieures à 0 */
+* { margin: 0; padding: 0; outline: 0;}
+
+/* The sidebar menu */
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 350px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  text-align:center;
+  padding-top: 300px;
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 6px 25px 0px 25px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav ul {
+   list-style-type: none;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+
+/* Style  de la section main */
+#main {
+  margin-left: 350px; /* Same as the width of the sidebar */
+}
+
+/*Style de toutes les sections à l'intérieur de la section principal*/
+.Presentation {
+  height: 100vh; /* Prend toute la page*/
+  padding: 0px 10px;
+}
+
+
+
+img {
+  height: 100px;
+  width: 100px;
+}
+/************************** Partie FOOTER ************************************/
+
+/************************** Partie HEADER ***************************************************/
+
+header {
+  height: 100px;
+  text-align:center;
+  background-color:#151;
+}
+
+/*test */ 
+#WB {
+  background-color:#161;
+}
+#WB h1 {
+   background-color:#171;
+}
+
+#WB p {
+   background-color:#191;
+}

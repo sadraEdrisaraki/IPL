@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<xsl:template match="/"> <!-- l'élement après la racine : "/", est l'élément racine du document : "/bulletins"-->
+		<html>
+			<head>
+				<title>Bulletins</title>
+			</head>
+			<body>
+				<h1>Bulletins des etudiants</h1>
+				<hr/>
+				<xsl:apply-templates select="//etudiant"/>
+			</body>
+		</html>
+	</xsl:template>
+	
+	<xsl:template match="etudiant">
+		<xsl:variable name="nomEtuCourant" select="@nom"/>
+		<h2> <xsl:value-of select="@nom"/> ( bloc <xsl:value-of select="//bloc[/etudiant/@nom=$nomEtuCourant]"/>)</h2> <!-- donne moi tous les bloc qui ont l'étudiant en paramètre -->
+	</xsl:template>
+	
+</xsl:stylesheet>

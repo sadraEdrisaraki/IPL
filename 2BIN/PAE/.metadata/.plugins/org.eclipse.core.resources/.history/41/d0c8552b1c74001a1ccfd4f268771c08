@@ -1,0 +1,21 @@
+package be.ipl.pae.main.ucc;
+
+import java.util.ArrayList;
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.dao.ClientDao;
+
+public interface ClientUcc {
+  ArrayList<ClientDto> getClients();
+
+<<<<<<< HEAD
+  ClientDto inscrire(ClientDto clientDto);
+=======
+  ArrayList<ClientDto> getClientsSansUtilisateurs();
+
+  ClientDto inscrire(ClientDto clientDto) throws InscriptionClientException;
+>>>>>>> branch 'master' of https://gitlab.vinci.be/6i2-cae/projet-ae-groupe-01.git
+
+  void setDao(ClientDao cDao);
+
+  ClientDto existe(ClientDto clientDto);
+}

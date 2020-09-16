@@ -1,0 +1,9 @@
+Processus parent en attente de la fin de son enfant (pid fils=4317).
+Je suis le fils './ex1': pid=4317 - ppid=4316
+F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S 1367359295 2643 2637  0 80 0 -  6984 wait   pts/18   00:00:00 bash
+0 S 1367359295 4316 2643  0 80 0 -  1088 wait   pts/18   00:00:00 ex1
+0 S 1367359295 4317 4316  0 80 0 -  4904 wait   pts/18   00:00:00 myScript.sh
+0 R 1367359295 4318 4317  0 80 0 -  9018 -      pts/18   00:00:00 ps
+Processus parent se termine après son enfant (pid fils=4317).
+

@@ -1,0 +1,4 @@
+NEW_FILE_TEMPLATE_NAME=Basic stylesheet - XSLT 1.0
+eclipse.preferences.version=1
+xsltagAttributeName=\#00ff00 | null | true | false | false | false
+xsltagAttributeValue=\#ff8000 | null | false | true | false | false

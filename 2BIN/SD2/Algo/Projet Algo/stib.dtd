@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT stib (stations, lignes)>
+<!ELEMENT stations (station+)>
+<!ELEMENT station (stop+)>
+<!ATTLIST station nom CDATA #REQUIRED>
+<!ELEMENT stop (#PCDATA)>
+<!ATTLIST stop longitude CDATA #REQUIRED>
+<!ATTLIST stop latitude CDATA #REQUIRED>
+
+<!ELEMENT lignes (ligne+)>
+<!ELEMENT ligne (troncon+)>
+<!ATTLIST ligne nom CDATA #REQUIRED>
+<!ATTLIST ligne source CDATA #REQUIRED>
+<!ATTLIST ligne destination CDATA #REQUIRED>
+<!ATTLIST ligne type CDATA #REQUIRED>
+<!ATTLIST ligne attenteMoyenne CDATA #REQUIRED>
+<!ELEMENT troncon EMPTY>
+<!ATTLIST troncon depart CDATA #REQUIRED>
+<!ATTLIST troncon arrivee CDATA #REQUIRED>
+<!ATTLIST troncon duree CDATA #REQUIRED>

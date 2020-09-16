@@ -1,0 +1,12 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.dto.ClientDTO;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public interface ClientDao {
+
+  ArrayList<ClientDTO> getClients();
+
+  ClientDTO inscrire(ClientDTO clientDto) throws SQLException;
+}

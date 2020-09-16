@@ -1,0 +1,65 @@
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
+public class Inscription {
+	
+	private Ecole[] ecoles; // retient toutes les écoles
+	private Map<Ecole, Queue<Eleve>> demandes;
+	private Map<Eleve, Set<Ecole>> demandesEleves;
+	private Set<Eleve> inscriptions; //  eleves déjà inscrit
+	//vous pouvez rajouter des attributs
+	
+	//à compléter: initialisation des attributs
+	public Inscription(Ecole... ecoles){
+		this.ecoles=ecoles;
+		this.demandes = new HashMap<Ecole, Queue<Eleve>>();
+		this.demandesEleves = new HashMap<Eleve, Set<Ecole>>();
+		this.inscriptions = new HashSet<Eleve>();
+		
+		for (int i = 0; i < this.ecoles.length; i++) {
+			this.demandes.put(this.ecoles[i], new LinkedList<Eleve>());
+		}
+	}
+	
+	// enregistre la demande d'inscription d'un élève à une école.
+	// Lance une RunTimeException si l'élève a déjà fait 3 demandes d'inscription
+	// Complexité: O(1) 
+	public void demandeInscription(Eleve eleve,Ecole ecole){
+		//ajoute l'eleve si pas ajouter
+		if (!demandesEleves.containsKey(eleve)) {
+			demandesEleves.put(eleve, new HashSet<Ecole>());
+		}
+		
+		if (demandesEleves.get(eleve).size() == 3) {
+			throw new RuntimeException();
+		}
+		
+		demandesEleves.get(eleve).add(ecole);
+		demandes.get(ecole).add(eleve);
+	}
+	
+	// parcourt les demandes d'inscription des élèves et inscrit les élèves selon
+	// l'ordre premier arrivé premier servi. Pour inscrire un élève,
+	// il faut appeler la méthode ajouterEleve de la classe Ecole. 
+	// Les élèves déjà inscrits dans une autre école ne sont pas inscrits.
+	// Complexité: O(n(log(n)))
+	public void remplirEcole(Ecole ecole) {
+		// parcourir toute les écoles pour laqulle il a fait une demande pour voir si l'élèves est déjà inscrit
+		System.out.println(ecole.getNom());
+		System.out.println(demandes.get(ecole).size());
+		while (!demandes.get(ecole).isEmpty()) {
+			Eleve aInscrire = demandes.get(ecole).poll();
+			if (inscriptions.contains(aInscrire)) { // eleve dejà insris dans une autre ecole
+				return;
+			}
+			if(ecole.ajouterEleve(aInscrire)) {
+				inscriptions.add(aInscrire);
+			}
+		}
+		
+	}
+}

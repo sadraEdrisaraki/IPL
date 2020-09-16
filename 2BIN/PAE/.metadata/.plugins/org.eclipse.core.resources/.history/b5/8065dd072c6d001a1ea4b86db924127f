@@ -1,0 +1,11 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.ClientDTO;
+
+import java.util.ArrayList;
+
+public interface ClientUcc {
+  ArrayList<ClientDTO> getDevisClient();
+
+  ClientDTO inscrireClient(ClientDTO);
+}

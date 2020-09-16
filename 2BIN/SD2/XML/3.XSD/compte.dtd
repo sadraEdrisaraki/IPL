@@ -1,0 +1,12 @@
+<!ELEMENT Nom (#PCDATA)>
+<!ELEMENT Prenom (#PCDATA)>
+<!ELEMENT Compte (#PCDATA)>
+<!ATTLIST Compte Monnaie  (Eur|Cad|Usd )  'Eur' >
+<!ELEMENT Visa (#PCDATA)>
+<!ELEMENT Bancontact (#PCDATA)>
+<!ELEMENT Proton EMPTY >
+<!ELEMENT CptVue (Compte , Visa? , Bancontact* , Proton?)>
+<!ELEMENT CptEpargne (Compte)>
+<!ELEMENT Comptes (CptEpargne | CptVue)+>
+<!ELEMENT Client (Nom , Prenom , Comptes)>
+<!ELEMENT Clients (Client+)>

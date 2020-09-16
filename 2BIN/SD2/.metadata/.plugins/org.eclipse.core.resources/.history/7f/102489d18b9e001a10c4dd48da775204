@@ -1,0 +1,21 @@
+
+public class Equipe{
+
+	private final String nom;
+	private int nbPoints;
+	
+	public Equipe(String nom) {
+		this.nom = nom;
+		this.nbPoints=0;
+	}
+	public int getNbPoints() {
+		return nbPoints;
+	}
+	public void setNbPoints(int nbPoints) {
+		this.nbPoints = nbPoints;
+	}
+	public String getNom() {
+		return nom;
+	}
+	
+}

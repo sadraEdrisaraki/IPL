@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="SmartImportWizard">
+		<item key="SmartImportRootWizardPage.STORE_HIDE_ALREADY_OPEN" value="false"/>
+		<item key="SmartImportRootWizardPage.STORE_CLOSE_IMPORTED" value="false"/>
+		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
+		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
+		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="D:\Documents7\IPL\SD2\Barman Rayan\inscription"/>
+			<item value="D:\Documents7\IPL\SD2\Barman Rayan\arbre"/>
+			<item value="D:\Documents7\IPL\SD2\Barman Rayan\graphe"/>
+			<item value="D:\Documents7\IPL\SD2\Barman Rayan\examen"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\septembre2018-etudiant\athletisme_nom_prenom"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\septembre2018-etudiant\recursion_nom_prenom"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\septembre2018-etudiant\graphe_nom_prenom"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\examen-etudiant2019\programmes_etudiants_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\examen-etudiant2019\recursion_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\examen-etudiant2019\graphe_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Révision"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Séance1"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Huffman"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\ExamenJuin2019\huffman_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\ExamenJuin2019\recursion_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Projet Algo"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Graphe"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\ExamenJuin2019\football_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\ExamenJuin2019\graphe_BARMAN"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\ExamenJuin2019\graphe_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Anciens_Examens\ExamenJuin2019\bulletins_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\XML\RecettesXSLExo"/>
+			<item value="D:\Documents7\IPL\SD2\XML\5.XSL\Exo Nuages"/>
+			<item value="D:\Documents7\IPL\SD2\XML\6.XPATH"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\SD_examen_septembre_2018\graphe_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Arbres"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\SD_examen_septembre_2018\file_arbre_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\XML\restaurant_NOM_PRENOM_examen_2018"/>
+		</list>
+	</section>
+</section>

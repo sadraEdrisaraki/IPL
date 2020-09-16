@@ -1,0 +1,31 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.TypeAmenagementDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.dao.TypeAmenagementDao;
+
+import java.util.ArrayList;
+
+import config.Inject;
+
+public class TypeAmenagementUccImpl implements TypeAmenagementUcc {
+
+  @Inject
+  private TypeAmenagementDao typeAmenagementDao;
+  @Inject
+  private BizFactory bizFactory;
+
+
+  public TypeAmenagementUccImpl() {}
+
+  @Override
+  public ArrayList<TypeAmenagementDto> getListeAmenagement() {
+    ArrayList<TypeAmenagementDto> listeAmenagement = typeAmenagementDao.getListeTypeAmenagement();
+    if (listeAmenagement == null) {
+      System.out.println("erreur recuperation liste amenagement TypeAmenagementUccImpl");
+      return null;
+    }
+    return listeAmenagement;
+  }
+
+}

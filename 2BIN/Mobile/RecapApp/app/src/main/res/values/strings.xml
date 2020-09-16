@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">MentalIPL2020</string>
+    <string name="action_settings">Settings</string>
+    <string name="nbCalculsText">Nombre de calculs:</string>
+    <string name="additionText">Addition</string>
+    <string name="soustractionText">Soustraction</string>
+    <string name="emailText">Email rapport:</string>
+
+    <string name="nouvellePartieBtn">NOUVELLE PARTIE</string>
+
+    <!-- game activity-->
+    <string name="calculeText">Calcule:</string>
+    <string name="gameActivityBtn">OK</string>
+    <string name="nbCalculsEffectue">calculs effectués</string>
+    <string name="endGame">FINI</string>
+
+    <!-- fichier de configuration -->
+    <string name="additionConfigText">ADDITION</string>
+    <string name="soustractionConfigText">SOUSTRACTION</string>
+    <string name="borneMinText">borne min</string>
+    <string name="borneMaxText">borne max</string>
+    <string name="majBtn">MAJ</string>
+
+
+    <!-- Menu items -->
+    <string name="item1">Configuration</string>
+</resources>

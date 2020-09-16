@@ -1,0 +1,40 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.dto.PhotoDto;
+import be.ipl.pae.main.exception.FatalException;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import config.Inject;
+
+public class PhotoDaoImpl implements PhotoDao {
+
+  @Inject
+  private DalServices dalS;
+
+  public PhotoDaoImpl() {}
+
+  @Override
+  public void enregistrerPhoto(PhotoDto photo) {
+    PreparedStatement ps = dalS.getPreparedStatement(
+        "INSERT INTO photos (id_amenagement,id_devis,visibilite,date_photo,url_photo)"
+            + " VALUES(?,?,?,?,?)");
+    try {
+      ps.setInt(1, photo.getId_amenagement());
+      ps.setInt(2, photo.getId_devis());
+      ps.setBoolean(3, photo.isVisible());
+      ps.setTimestamp(4, photo.getDate_photo());
+      ps.setString(5, photo.getPhoto());
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+
+    try (ResultSet res = ps.executeQuery()) {
+      if(res)
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
+  }
+}

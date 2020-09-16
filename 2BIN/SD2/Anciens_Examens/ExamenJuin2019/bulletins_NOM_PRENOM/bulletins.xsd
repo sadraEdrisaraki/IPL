@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="note">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:maxInclusive value="20" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="anneeNaissance">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d{4}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="code">
+    <xs:restriction base="xs:ID">
+      <xs:pattern value="I\d{4}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="bulletins">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="cours" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="nom" type="xs:string" use="required" />
+            <xs:attribute name="code" type="code" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="bloc" minOccurs="3" maxOccurs="3">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="etudiant" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="note" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="note">
+                            <xs:attribute name="cours" type="xs:IDREF" use="required"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="nom" type="xs:string" use="required" />
+                  <xs:attribute name="anneeNaissance" type="anneeNaissance" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="numero" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="1"/>
+                  <xs:enumeration value="2"/>
+                  <xs:enumeration value="3"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

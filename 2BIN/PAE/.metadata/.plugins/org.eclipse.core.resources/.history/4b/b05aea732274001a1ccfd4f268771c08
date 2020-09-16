@@ -1,0 +1,9 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.PhotoDto;
+
+import java.sql.SQLException;
+
+public interface PhotoUcc {
+  void enregistrerPhoto(PhotoDto photo) throws SQLException;
+}

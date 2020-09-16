@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="author" content="Choquet Olivier" />
+<title>Recette HTML</title>
+<!-- une icône dans la barre du navigateur-->
+<link rel=icon href="images/favicon.png" type="image/png">
+<link rel="stylesheet" type="text/css" href="styles/style.css" />
+</head>
+<body>
+	<!-- bannière et menu -->
+	<header>
+		<img src="./images/logo.png" alt="logo"/>
+		<nav>
+			<ul>
+				<li><a href="./index.html"> Accueil </a></li>
+				<li><a href="http://validator.w3.org/"> Validateur HTML5 </a></li>
+				<li><a href="http://jigsaw.w3.org/css-validator/"> Validateur CSS3 </a></li>
+				<li><a href="http://moodle.vinci.be"> Moodle </a></li>
+				<li><a href="./form.html"> Laissez un commentaire </a></li>
+			</ul>
+		</nav>
+	</header>
+	<!-- section principale -->
+	<section id="mainSection">
+		<h2> Envie de déposer un commentaire ? </h2>
+		<p>
+			Vous pouvez à l'aide de ce formulaire entrez un commentaire ou une remarque sur la recette HTML.	
+		</p>
+		<form method="POST" action="trt.php">
+			<fieldset>
+				<legend>Informations personnelles : </legend>
+				<label for="name">Votre nom : </label>
+				<input id="name" type="text" placeholder="Entrez ici votre nom" size="50"/><br>
+				<label for="firstname">Votre prénom : </label>
+				<input id="firstname" type="text" placeholder="Entrez ici votre prénom" size="50"/><br>
+				<label for="email">Votre email : </label>
+				<input id="email" type="email" placeholder="Entrez ici votre email" size="50" /><br>
+			</fieldset>
+			<fieldset><legend>Commentaire : </legend>
+			<textarea id="comment" cols="100" rows="5">Entrez ici votre commentaire
+			</textarea>
+			</fieldset>
+			<input type="submit" value="Envoyer"/>
+		</form>
+		<!-- fin de section partiePrincipale -->
+	</section>
+	<footer>
+		<p>
+			Recette créée par Choquet Olivier.
+		</p>
+	</footer>
+</body>
+
+</html>

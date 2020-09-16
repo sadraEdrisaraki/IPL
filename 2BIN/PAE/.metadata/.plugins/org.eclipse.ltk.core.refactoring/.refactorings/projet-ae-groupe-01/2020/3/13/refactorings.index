@@ -1,0 +1,23 @@
+1585219814611	Extract interface 'PhotoDDD'
+1585219857476	Rename type 'PhotoDDD'
+1585220058611	Extract interface 'DalService'
+1585222177402	Delete element
+1585222250288	Move compilation unit
+1585227824790	Delete element
+1585228110932	Rename type 'DevisDTO'
+1585228122177	Rename type 'PhotoDTO'
+1585228276718	Delete element
+1585228436941	Extract interface 'BizFactory'
+1585228442647	Delete element
+1585228444441	Delete element
+1585228446095	Delete element
+1585228447659	Delete element
+1585228450049	Delete element
+1585228451861	Delete element
+1585228453238	Delete element
+1585228454660	Delete element
+1585228456664	Delete element
+1585411465291	Rename type 'DalService'
+1585411867533	Rename type 'DalServiceImpl'
+1585420076546	Rename field 'threadMap'
+1585498939289	Rename type 'DatabaseException'

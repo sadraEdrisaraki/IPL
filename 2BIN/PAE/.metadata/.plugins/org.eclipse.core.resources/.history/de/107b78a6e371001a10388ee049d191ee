@@ -1,0 +1,15 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.exception.FatalException;
+
+import java.util.ArrayList;
+
+public interface ClientDao {
+
+  ArrayList<ClientDto> getClients();
+
+  ClientDto inscrire(ClientDto clientDto);
+
+  ClientDto inscrireWithoutBoite(ClientDto clientDto) throws FatalException;
+}

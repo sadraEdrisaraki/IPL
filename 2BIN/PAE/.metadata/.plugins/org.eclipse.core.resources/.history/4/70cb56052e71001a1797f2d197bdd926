@@ -1,0 +1,18 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.exception.DatabaseException;
+
+import java.sql.PreparedStatement;
+
+
+public interface DalServices {
+
+  PreparedStatement getPreparedStatement(String query);
+
+  void commit();
+
+  void rollback();
+
+  void startTransaction() throws DatabaseException;
+
+}

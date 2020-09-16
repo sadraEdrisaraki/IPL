@@ -1,0 +1,79 @@
+
+public class Match {
+	
+	public static final int VICTOIRE_DOMICILE=0;
+	public static final int EGALITE=1;
+	public static final int VICTOIRE_VISITEUR=2;
+
+	private final Equipe equipeDomicile;
+	private final Equipe equipeVisiteuse;
+	
+	private final int nbButDomicile;
+	private final int nbButVisiteur;
+	
+	public Match(Equipe equipeDomicile, Equipe equipeVisiteuse, int nbButDomicile, int nbButVisiteur) {
+		if (nbButDomicile<0||nbButVisiteur<0) throw new IllegalArgumentException();
+		this.equipeDomicile = equipeDomicile;
+		this.equipeVisiteuse = equipeVisiteuse;
+		this.nbButDomicile = nbButDomicile;
+		this.nbButVisiteur = nbButVisiteur;
+	}
+	public Equipe getEquipeDomicile() {
+		return equipeDomicile;
+	}
+	public Equipe getEquipeVisiteuse() {
+		return equipeVisiteuse;
+	}
+	public int getNbButDomicile() {
+		return nbButDomicile;
+	}
+	public int getNbButVisiteur() {
+		return nbButVisiteur;
+	}
+	public int obtenirResultat() {
+		if (nbButDomicile>nbButVisiteur) return VICTOIRE_DOMICILE;
+		if (nbButDomicile==nbButVisiteur) return EGALITE;
+		return VICTOIRE_VISITEUR;
+	}
+	
+	/**
+	 * qui attribue un code de hashage à un objet. En gros, elle donne un identifiant à un objet. 
+	 * Notez que cet identifiant sert plus à catégoriser votre objet qu'à l'identifier formellement.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((equipeDomicile == null) ? 0 : equipeDomicile.hashCode());
+		result = prime * result + ((equipeVisiteuse == null) ? 0 : equipeVisiteuse.hashCode());
+		result = prime * result + nbButDomicile;
+		result = prime * result + nbButVisiteur;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Match other = (Match) obj;
+		if (equipeDomicile == null) {
+			if (other.equipeDomicile != null)
+				return false;
+		} else if (!equipeDomicile.equals(other.equipeDomicile))
+			return false;
+		if (equipeVisiteuse == null) {
+			if (other.equipeVisiteuse != null)
+				return false;
+		} else if (!equipeVisiteuse.equals(other.equipeVisiteuse))
+			return false;
+		if (nbButDomicile != other.nbButDomicile)
+			return false;
+		if (nbButVisiteur != other.nbButVisiteur)
+			return false;
+		return true;
+	}	
+	
+}

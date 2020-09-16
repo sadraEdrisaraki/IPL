@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="anneeNaissance">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{4}" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="code">
+		<xs:restriction base="xs:ID">
+			<xs:pattern value="s\d{2}" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="semaine">
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value="8" />
+			<xs:minInclusive value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="stages">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="stage" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="sport" type="xs:string"
+							use="required" />
+						<xs:attribute name="code" type="code" use="required" />
+						<xs:attribute name="semaine" type="semaine"
+							use="required" />
+						<xs:attribute name="niveau" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="debutant" />
+									<xs:enumeration value="intermediaire" />
+									<xs:enumeration value="avance" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="enfant" minOccurs="0"
+					maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="inscription" minOccurs="0"
+								maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="stage" type="xs:IDREF"
+										use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="nom" type="xs:string"
+							use="required" />
+						<xs:attribute name="prenom" type="xs:string"
+							use="required" />
+						<xs:attribute name="anneeNaissance"
+							type="anneeNaissance" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

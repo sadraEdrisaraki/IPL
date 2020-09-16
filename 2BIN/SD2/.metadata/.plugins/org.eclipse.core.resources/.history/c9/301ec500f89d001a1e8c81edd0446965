@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bulletin SYSTEM "bulletin.dtd" >
+<bulletins>
+  <cours code="I0000" nom=""/>
+  <bloc numero="1">
+    <etudiant anneeNaissance="1997" nom="">
+      <note cours="I0000">1</note>
+    </etudiant>
+  </bloc>
+  <bloc numero="1">
+    <etudiant anneeNaissance="1997" nom="">
+      <note cours="I0000">1</note>
+    </etudiant>
+  </bloc>
+  <bloc numero="1">
+    <etudiant anneeNaissance="2002" nom="">
+      <note cours="I0000">1</note>
+    </etudiant>
+  </bloc>
+</bulletins>

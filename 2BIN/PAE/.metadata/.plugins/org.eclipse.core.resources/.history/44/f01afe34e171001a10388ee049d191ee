@@ -1,0 +1,14 @@
+package be.ipl.pae.main.api;
+
+import config.InjectionService;
+
+public class Main {
+
+  public static void main(String[] args) {
+
+    Serveur serveur = new Serveur();
+    InjectionService.injecter(serveur, "prod.properties");
+    serveur.start();
+  }
+
+}

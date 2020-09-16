@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fichier_personnel SYSTEM "ficherPerso.dtd">
+<fichier_personnel>
+	<personne>
+		<identie>
+			<nom> Barman</nom>
+			<prenom> Rayan</prenom>
+		</identie>
+		<bio>
+			<yeux couleur= "vert"></yeux>
+			<cheveux couleur = "rose"></cheveux>
+			<age> 22</age>
+			<poids kg="60"></poids>
+			<groupe_sangiun type="A"></groupe_sangiun>
+		</bio>
+		<socio>
+			<langue/>
+			<etat_civil type="marié"> </etat_civil>
+			<passeport nr="1"></passeport>
+		</socio>
+	</personne>
+</fichier_personnel>

@@ -1,0 +1,119 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.config.InjectionService;
+import be.ipl.pae.main.exception.FatalException;
+
+import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
+public class DalServicesImpl implements DalServices, DalServivesDbManager {
+
+
+  // Retient la connexion utilise dans son thread
+  private static ThreadLocal<Connection> threadLocalConn = new ThreadLocal<>();
+
+  // Retient les connexions
+  private PoolingDataSource<PoolableConnection> dataSource;
+
+  private void initProperties() {
+
+    ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+        InjectionService.getPropsData("db_conn.properties", "url_db"),
+        InjectionService.getPropsData("db_conn.properties", "pseudo_db"),
+        InjectionService.getPropsData("db_conn.properties", "mot_de_passe_db"));
+
+    PoolableConnectionFactory poolableConnectionFactory =
+        new PoolableConnectionFactory(connectionFactory, null);
+
+    ObjectPool<PoolableConnection> connectionPool =
+        new GenericObjectPool<>(poolableConnectionFactory);
+
+    poolableConnectionFactory.setPool(connectionPool);
+
+    dataSource = new PoolingDataSource<>(connectionPool);
+  }
+
+  /**
+   * Initie la connection a la db.
+   */
+  public DalServicesImpl() {
+
+    try {
+      Class.forName("org.postgresql.Driver");
+    } catch (ClassNotFoundException exception) {
+      System.out.println("Driver PostgreSQL not found");
+      System.exit(1);
+    }
+
+    initProperties();
+  }
+
+  @Override
+  public PreparedStatement getPreparedStatement(String query) {
+
+    PreparedStatement ps;
+    try {
+      ps = threadLocalConn.get().prepareStatement(query);
+      return ps;
+    } catch (SQLException exc) {
+      throw new FatalException(exc);
+    }
+  }
+
+
+  @Override
+  public void startTransaction() {
+    if (threadLocalConn.get() == null) {
+      threadLocalConn.set(new Connexion());
+      try {
+        threadLocalConn.get().setConnection(dataSource.getConnection());
+      } catch (SQLException exc) {
+        throw new FatalException(exc);
+      }
+    }
+
+    try {
+      // desactive les commit auto qui se font apres une execution d une query
+      threadLocalConn.get().getConnection().setAutoCommit(false);
+    } catch (SQLException exc) {
+      throw new FatalException(exc);
+    }
+  }
+
+  @Override
+  public void commit() {
+    try {
+      threadLocalConn.get().commit();
+      threadLocalConn.get().getConnection().setAutoCommit(true);
+      threadLocalConn.get().getConnection().close();
+      threadLocalConn.set(null);
+    } catch (SQLException exc) {
+      throw new FatalException(exc);
+    }
+  }
+
+  /**
+   * Rollback sur la connexion entiere.
+   * 
+   * @throws FatalException Lance une fatal exception si une erreur se produit pendant le rollback.
+   */
+  @Override
+  public void rollback() {
+    try {
+      threadLocalConn.get().getConnection().rollback();
+    } catch (SQLException exc) {
+      throw new FatalException(exc);
+    }
+
+  }
+}

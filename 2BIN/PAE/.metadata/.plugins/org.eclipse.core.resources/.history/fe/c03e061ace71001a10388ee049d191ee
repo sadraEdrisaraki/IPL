@@ -1,0 +1,86 @@
+package be.ipl.pae.main.ucc;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import be.ipl.pae.main.exception.CompteNonActiveeException;
+import be.ipl.pae.main.exception.ListeUtilisateurNonPresentException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import config.Inject;
+import config.InjectionService;
+
+class UtilisateurUccImplTest {
+
+  private static final String PASSWORD = "1";
+  private static final String USERNAME = "fr";
+  @Inject
+  UtilisateurUcc utilisateurUcc;
+
+  {
+    InjectionService.injecter(this, "prod.properties");
+  }
+
+  @BeforeEach
+  void setUp() throws Exception {}
+
+
+  @Test
+  void testCheckCompteMdpCorrect() throws CompteNonActiveeException {
+    assertNotNull(utilisateurUcc.seConnecter(USERNAME, PASSWORD));
+  }
+
+  @Test
+  void testCheckCompteParametreNull() {
+    assertAll(
+        () -> assertThrows(IllegalArgumentException.class,
+            () -> utilisateurUcc.seConnecter(USERNAME, null)),
+        () -> assertThrows(IllegalArgumentException.class,
+            () -> utilisateurUcc.seConnecter(null, PASSWORD)));
+  }
+
+  @Test
+  void testCheckCompteParametreVide() {
+    assertAll(
+        () -> assertThrows(IllegalArgumentException.class,
+            () -> utilisateurUcc.seConnecter("", PASSWORD)),
+        () -> assertThrows(IllegalArgumentException.class,
+            () -> utilisateurUcc.seConnecter(USERNAME, "")));
+  }
+
+  @Test
+  void testCheckCompteMdpPseudoInexistant() throws CompteNonActiveeException {
+    assertNull(utilisateurUcc.seConnecter("212122122", "bonjour"));
+  }
+
+  @Test
+  void testCheckCompteMdpPseudoCorrecteMotDePasseIncorrecte() throws CompteNonActiveeException {
+    // assertNull(utilisateurUcc.seConnecter(USERNAME, PASSWORD));
+    // TODO
+    assert (true);
+  }
+
+  @Test
+  void testCheckGetUtilisateurPseudo() {
+    assertAll(() -> assertNull(utilisateurUcc.getUtilisateur("pseudoIncorrecte")),
+        () -> assertNotNull(utilisateurUcc.getUtilisateur("fr")));
+  }
+
+  @Test
+  void testCheckGetUtilisateurId() {
+    assertAll(() -> assertNull(utilisateurUcc.getUtilisateur(510)),
+        () -> assertNotNull(utilisateurUcc.getUtilisateur(2)));
+  }
+
+  @Test
+  void testCheckGetUtilisateurListe() throws ListeUtilisateurNonPresentException {
+    assertNotNull(utilisateurUcc.getUtilisateurs());
+  }
+
+
+
+}

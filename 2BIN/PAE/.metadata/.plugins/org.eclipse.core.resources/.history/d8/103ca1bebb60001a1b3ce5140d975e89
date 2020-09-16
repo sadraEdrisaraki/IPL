@@ -1,0 +1,15 @@
+package be.ipl.pae.main.api;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator.Builder;
+import com.auth0.jwt.algorithms.Algorithm;
+
+public class Utils {
+  private static final String JWTSECRET = "PROJETAE2019";
+  
+  public static Builder createToken() {
+     Algorithm algorithm = Algorithm.HMAC256(JWTSECRET);
+     return JWT.create().withIssuer("auth0");
+  }
+
+}

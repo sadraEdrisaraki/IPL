@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:output method="html" version="html4.01" encoding="ISO-8859-1" />
+	
+	<xsl:template match="/">
+		<html>
+			<head>
+				<title>Examens</title>
+			</head>
+			<body>
+				<h1>Examens</h1>
+				<hr/>
+				<xsl:apply-templates select="//Local"></xsl:apply-templates>
+			</body>
+		</html>
+	</xsl:template>
+	
+	<xsl:template match="Local">
+		<xsl:variable name="LocalID" select="."></xsl:variable>
+		<h2><xsl:value-of select="."/> 
+		<xsl:choose>
+			<xsl:when test="@nbPlace"> ( <xsl:value-of select="@nbPlace"/> ) </xsl:when>
+			<xsl:otherwise> ( nombre de places inconnue)</xsl:otherwise>
+		</xsl:choose>
+		</h2>
+		
+		<xsl:for-each select="//recette">
+				<xsl:sort select="@type"/>
+				<xsl:sort select=".//titre"/>
+		
+		
+	</xsl:template>
+	
+</xsl:stylesheet>

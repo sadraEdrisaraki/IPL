@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bulletins xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="bulletins.xsd">
+  <cours code="I4444" nom=""/>
+  <bloc numero="1">
+    <etudiant anneeNaissance="1997" nom=""/>
+  </bloc>
+  <bloc numero="2">
+    <etudiant anneeNaissance="2004" nom=""/>
+  </bloc>
+  <bloc numero="3">
+    <etudiant anneeNaissance="2002" nom=""/>
+  </bloc>
+</bulletins>

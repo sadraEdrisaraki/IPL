@@ -1,0 +1,75 @@
+package be.ipl.pae.main.ucc;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.dao.ClientDao;
+import be.ipl.pae.main.exception.InscriptionClientException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import config.Inject;
+import config.InjectionService;
+
+class ClientUccImplTest {
+
+  @Inject
+  private BizFactory bizFactory;
+
+  @Inject
+  ClientUcc cUcc;
+
+  ClientDao cDao;
+  ClientDao cDaoVide;
+  ClientDto cDto;
+
+  {
+    InjectionService.injecter(this, "prod.properties");
+  }
+
+  @BeforeEach
+  void setUp() throws Exception {
+
+    cDto = bizFactory.getClient();
+
+    ArrayList<ClientDto> listeClient = new ArrayList<ClientDto>();
+    listeClient.add(cDto);
+
+    cDao = org.mockito.Mockito.mock(ClientDao.class);
+    when(cDao.inscrire(cDto)).thenReturn(cDto);
+    when(cDao.inscrireWithoutBoite(cDto)).thenReturn(cDto);
+    
+    when(cDao.getClients()).thenReturn(listeClient);
+
+    cDaoVide = org.mockito.Mockito.mock(ClientDao.class);
+    when(cDaoVide.getClients()).thenReturn(null);
+  }
+
+  @Test
+  void testGetDevisClientVide() {
+    cUcc.setDao(cDaoVide);
+    assertNull(cUcc.getClients());
+  }
+
+  @Test
+  void testGetDevisClientNonVide() {
+    System.out.println("Test client non vide");
+    cUcc.setDao(cDao);
+    assertTrue(cUcc.getClients().contains(cDto));
+  }
+
+  @Test
+  void testInscrire() throws InscriptionClientException {
+    System.out.println("Test inscription client");
+    cUcc.setDao(cDao);
+    assertEquals(cUcc.inscrire(cDto), cDto);
+  }
+
+}

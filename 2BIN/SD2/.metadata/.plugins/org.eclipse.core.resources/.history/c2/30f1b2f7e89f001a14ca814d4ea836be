@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT HoraireExamen (Examen*,Local+)>
+<!ELEMENT Examen (Repartition+)>
+<!ATTLIST Examen date CDATA #REQUIRED>
+<!ATTLIST Examen type (ecrit|oral) #REQUIRED>
+<!ATTLIST Examen nom CDATA #REQUIRED>
+<!ELEMENT Repartition EMPTY>
+<!ATTLIST Repartition local IDREF #REQUIRED>
+<!ATTLIST Repartition de CDATA #REQUIRED>
+<!ATTLIST Repartition a CDATA #REQUIRED>

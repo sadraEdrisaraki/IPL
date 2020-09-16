@@ -1,0 +1,10 @@
+package be.ipl.pae.main.dao;
+
+import java.sql.PreparedStatement;
+
+
+public interface DalService {
+
+  PreparedStatement getPreparedStatement(QueryNamesEnum query);
+
+}

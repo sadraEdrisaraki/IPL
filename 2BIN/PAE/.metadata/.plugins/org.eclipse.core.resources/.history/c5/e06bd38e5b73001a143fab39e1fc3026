@@ -1,0 +1,186 @@
+package be.ipl.pae.main.ucc;
+
+import static utils.CheckUtils.checkObject;
+import static utils.CheckUtils.checkString;
+
+import be.ipl.pae.main.biz.TypeUtilisateurEnum;
+import be.ipl.pae.main.biz.contrainteMetier.UtilisateurBiz;
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.biz.impl.UtilisateurImpl;
+import be.ipl.pae.main.dao.DalServivesDbManager;
+import be.ipl.pae.main.dao.UtilisateurDao;
+import be.ipl.pae.main.exception.BizException;
+import be.ipl.pae.main.exception.CompteNonActiveeException;
+import be.ipl.pae.main.exception.EmailDejaExistantException;
+import be.ipl.pae.main.exception.FatalException;
+import be.ipl.pae.main.exception.ListeUtilisateurNonPresentException;
+import be.ipl.pae.main.exception.PseudoDejaExistantException;
+
+import java.util.ArrayList;
+
+import config.Inject;
+
+public class UtilisateurUccImpl implements UtilisateurUcc {
+
+  @Inject
+  private UtilisateurDao utilisateurDao;
+  @Inject
+  private BizFactory bizFactory;
+  @Inject
+  private DalServivesDbManager dalServices;
+
+  public UtilisateurUccImpl() {}
+
+  @Override
+  public UtilisateurDto seConnecter(String pseudo, String motDePasse)
+      throws CompteNonActiveeException {
+    checkObject(pseudo);
+    checkObject(motDePasse);
+    checkString(pseudo);
+    checkString(motDePasse);
+
+    try {
+      dalServices.startTransaction();
+      String motDePasseRetourne = utilisateurDao.getUtilisateurMotDePasse(pseudo);
+      // compte inexistant
+      if (motDePasseRetourne == null) {
+        return null;
+      }
+
+      if (UtilisateurImpl.checkMotDePasseCrypte(motDePasse, motDePasseRetourne)) {
+        System.out.println("Mot de passe correct !");
+
+        UtilisateurDto utilisateur = utilisateurDao.getUtilisateur(pseudo);
+
+        // Verifie si le compte est un utilisateur active
+        if (!utilisateur.getType().equals(TypeUtilisateurEnum.O)) {
+          boolean estUnCompteActivee = utilisateurDao.estCompteActivee(pseudo);
+          if (!estUnCompteActivee) {
+            throw new CompteNonActiveeException(pseudo + " est un compte non active");
+          }
+        }
+        return utilisateur;
+      }
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+    return null;
+  }
+
+  @Override
+  public UtilisateurDto getUtilisateur(String pseudo) {
+    checkObject(pseudo);
+    checkString(pseudo);
+
+    UtilisateurDto utilisateur;
+    try {
+      dalServices.startTransaction();
+      utilisateur = utilisateurDao.getUtilisateur(pseudo);
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+
+
+    return utilisateur;
+  }
+
+  @Override
+  public UtilisateurDto inscrireUtilisateur(UtilisateurDto utilisateurDTO)
+      throws PseudoDejaExistantException, EmailDejaExistantException {
+
+    UtilisateurBiz utilisateur = (UtilisateurBiz) utilisateurDTO;
+
+    if (!utilisateur.verifierNom()) {
+      throw new BizException("Erreur dans le nom");
+    }
+    if (!utilisateur.verifierPrenom()) {
+      throw new BizException("Erreur dans le prenom");
+    }
+    if (!utilisateur.verifierPseudo()) {
+      throw new BizException("Erreur dans le pseudo");
+    }
+    if (!utilisateur.verifierEmail()) {
+      throw new BizException("Erreur dans l'email");
+    }
+    if (!utilisateur.verifierVille()) {
+      throw new BizException("Erreur dans la ville");
+    }
+    if (!utilisateur.verifierMdp()) {
+      throw new BizException("Erreur dans la mot de passe");
+    }
+    if (!utilisateur.verifierType()) {
+      throw new BizException("Erreur dans le type");
+    }
+
+    try {
+      dalServices.startTransaction();
+      if (!utilisateurDao.pseudoEstUnique(utilisateurDTO.getPseudo())) {
+        System.out.println("Pseudo Deja existant : " + utilisateur.getPseudo());
+        throw new BizException("Pseudo Deja existant");
+      }
+
+      if (!utilisateurDao.emailExistePas(utilisateurDTO.getEmail())) {
+        System.out.println("Email deja existant : " + utilisateur.getEmail());
+        throw new BizException("Email deja existant");
+      }
+
+      utilisateur
+          .setMot_de_passe(UtilisateurImpl.crypterMotDePasse(utilisateurDTO.getMot_de_passe()));
+
+      return utilisateurDao.inscrire(utilisateurDTO);
+
+    } catch (Exception exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+  }
+
+  @Override
+  public ArrayList<UtilisateurDto> getUtilisateurs() throws ListeUtilisateurNonPresentException {
+
+    try {
+      dalServices.startTransaction();
+      ArrayList<UtilisateurDto> listeUtilisateur = utilisateurDao.getUtilisateurs();
+      if (listeUtilisateur == null) {
+        throw new ListeUtilisateurNonPresentException("Il n'y a pas d'Utilisateur");
+      }
+      return listeUtilisateur;
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+  }
+
+  @Override
+  public UtilisateurDto getUtilisateur(int idUtilisateur) {
+
+    UtilisateurDto utilisateur;
+    try {
+      dalServices.startTransaction();
+      utilisateur = utilisateurDao.getUtilisateur(idUtilisateur);
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+
+    return utilisateur;
+  }
+
+  public void setUtilisateurDao(UtilisateurDao utilisateurDao) {
+    this.utilisateurDao = utilisateurDao;
+  }
+}
+

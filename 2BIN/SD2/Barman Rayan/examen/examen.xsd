@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ecrit" />
+			<xs:enumeration value="oral" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="HoraireExamen">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Examen" minOccurs="0"
+					maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Repartition" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="local" type="xs:IDREF"
+										use="required" />
+									<xs:attribute name="de" type="xs:string"
+										use="required" />
+									<xs:attribute name="a" type="xs:string"
+										use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="date" type="xs:date"
+							use="required" />
+						<xs:attribute name="type" type="type" />
+						<xs:attribute name="nom" type="xs:string"
+							use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Local" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:ID">
+								<xs:attribute name="nbPlace"
+									type="xs:nonNegativeInteger" />
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

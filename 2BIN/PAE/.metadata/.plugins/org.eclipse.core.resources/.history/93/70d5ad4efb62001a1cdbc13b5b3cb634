@@ -1,0 +1,59 @@
+package be.ipl.pae.main.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import be.ipl.pae.main.api.InjectionService;
+
+public class DalService {
+
+  Connection conn;
+  private Map<QueryNamesEnum, PreparedStatement> psMap =
+      new HashMap<QueryNamesEnum, PreparedStatement>();
+
+
+  public DalService() {
+    init_conn();
+    PreparedStatement ps;
+
+    try {
+      ps = conn.prepareStatement("SELECT u.mot_de_passe FROM utilisateurs u WHERE u.pseudo=?");
+      psMap.put(QueryNamesEnum.GET_MOT_DE_PASSE, ps);
+
+      ps = conn.prepareStatement("SELECT u.id_utilisateur, u.nom,u.prenom,u.ville,"
+          + "u.email,u.pseudo,u.mot_de_passe,u.type,u.id_client,u.date_inscription "
+          + "FROM utilisateurs u WHERE u.pseudo=? ");
+      psMap.put(QueryNamesEnum.GET_USER, ps);
+
+    } catch (SQLException e) {
+      System.out.println("Failed to construct PreparedStatement");
+      e.printStackTrace();
+    }
+
+  }
+
+  public PreparedStatement getPreparedStatement(QueryNamesEnum query) {
+    return psMap.get(query);
+  }
+
+  private void init_conn() {
+    try {
+      Class.forName("org.postgresql.Driver");
+    } catch (ClassNotFoundException exception) {
+      System.out.println("Driver PostgreSQL not found");
+      System.exit(1);
+    }
+    String url = InjectionService.getPropsData("db_conn.properties", "url_db");
+    String pseudoDb = InjectionService.getPropsData("db_conn.properties", "pseudo_db");
+    String motDePasseDb = InjectionService.getPropsData("db_conn.properties", "mot_de_passe_db");
+    try {
+      conn = DriverManager.getConnection(url, pseudoDb, motDePasseDb);
+    } catch (SQLException exception) {
+      System.out.println("Impossible de se connecter");
+      System.exit(1);
+    }
+  }
+}

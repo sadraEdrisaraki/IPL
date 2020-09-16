@@ -1,0 +1,100 @@
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Championnat {
+	
+	// ajouter/modifier attributs ici
+	private Set<Equipe> equipes = new TreeSet<Equipe>(Comparator.comparing(Equipe::getNbPoints).reversed().thenComparing(Equipe::getNom));
+	private Set<Match> matchs = new HashSet<Match>();
+
+	public Championnat(Equipe... equipes) {
+		for (Equipe equipe : equipes) {
+			this.equipes.add(equipe);
+		}
+		/*
+		
+		Comparator<Etudiant> comp = new Comparator<Etudiant>() {
+            @Override
+            public int compare(Etudiant e1, Etudiant e2) {
+                int tmp = Integer.compare(e1.getNbEctsValides(), e2.getNbEctsValides());
+                if (tmp == 0) {
+                    return e1.getNom().compareTo(e2.getNom());
+                }
+                return tmp;
+            }
+        };
+  
+		}
+		*/
+		//initialise ce qu'il faut initialiser si necessaire
+	}
+
+	// A COMPLETER	
+	// Enregistre le match dans une structure de donnees et met a jour les points des deux equipes.
+	// Une victoire vaut 3 points, une egalite 1 point, une defaite 0 point.
+	// Si un match avec la meme equipe domicile et la meme équipe visiteur à deja eu lieu, la methode
+	// lance une RuntimeException avec le message "match deja joue"
+	// Vous ne devez pas gerer d'autres cas d'erreur.
+	public void encoderMatch(Equipe equipeDomicile, Equipe equipeVisiteuse, int nbButDomicile, int nbButVisiteur) {
+		
+		
+		if (matchs.add(new Match(equipeDomicile, equipeVisiteuse, nbButDomicile, nbButVisiteur))) {
+			if (nbButDomicile > nbButVisiteur) { // domicile gagnante
+				equipes.remove(equipeDomicile);
+				equipeDomicile.setNbPoints(equipeDomicile.getNbPoints() + 3);
+				equipes.add(equipeDomicile);
+			} else if (nbButDomicile < nbButVisiteur) { // visiteur gagnant
+				equipes.remove(equipeVisiteuse);
+				equipeVisiteuse.setNbPoints(equipeVisiteuse.getNbPoints() + 3);
+				equipes.add(equipeVisiteuse);
+			} else { // égalité
+				equipes.remove(equipeVisiteuse);
+				equipes.remove(equipeDomicile);
+				equipeDomicile.setNbPoints(equipeDomicile.getNbPoints() + 1);
+				equipeVisiteuse.setNbPoints(equipeVisiteuse.getNbPoints() +1);
+				equipes.add(equipeVisiteuse);
+				equipes.add(equipeDomicile);
+			}
+		} else {
+			throw new RuntimeException();
+		}
+	}
+	
+	// A COMPLETER
+	// affiche le classement des equipes avec les points obtenus a la console.
+	// Voici un exemple de sortie attendue
+	// 1. ipl 6
+	// 2. ucl 4
+	// 3. ecam 1
+	// 4. ephec 0
+	// Si deux equipes ont le meme nombre de points, on affiche 
+	// les deux equipes dans n'importe quel sens.
+	public void afficherClassement() {
+		
+		Iterator<Equipe> itr = equipes.iterator();
+		int position=1;
+		while(itr.hasNext()){
+			System.out.println(position + ". " + itr.next());
+			position++;
+		}
+	}
+	
+	public static void main(String[] args) throws InterruptedException {
+		Equipe ipl= new Equipe("ipl");
+		Equipe ecam= new Equipe("ecam");
+		Equipe ephec= new Equipe("ephec");
+		Equipe ucl= new Equipe("ucl");
+		Championnat c= new Championnat(ipl, ecam, ephec, ucl);
+		c.encoderMatch(ipl, ecam, 3, 0);
+		c.encoderMatch(ephec, ucl, 0, 1);
+		c.encoderMatch(ipl, ephec, 3, 0);
+		c.encoderMatch(ecam, ucl, 1, 1);
+		c.afficherClassement();
+		Thread.sleep(50); //cette ligne est uniquement presente pour l'affichage
+		c.encoderMatch(ipl, ecam, 1, 0);
+	}
+
+}

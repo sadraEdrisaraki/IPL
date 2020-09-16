@@ -1,0 +1,5 @@
+package be.ipl.pae.main.dao;
+
+public interface DalServivesDbManager {
+
+}

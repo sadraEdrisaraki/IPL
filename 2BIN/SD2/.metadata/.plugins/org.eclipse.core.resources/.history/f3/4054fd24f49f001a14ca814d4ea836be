@@ -1,0 +1,93 @@
+import java.util.Arrays;
+import java.util.Iterator;
+
+public class Tree implements Iterable<Tree> {
+
+	private int value;
+
+	private Tree parent;
+
+	private Tree[] children;
+
+	// *******************************************************
+	// CONSTRUCTEURS
+	// *******************************************************
+	public Tree(int v, Tree[] chd) {
+		value = v;
+		children = chd;
+
+		for (Tree child : chd) {
+			child.parent = this;
+		}
+	}
+
+	public Tree(int v) {
+		this(v, new Tree[0]);
+	}
+
+	// *******************************************************
+	// GETTERS
+	// *******************************************************
+	public int getValue() {
+		return value;
+	}
+
+	public Tree getParent() {
+		return parent;
+	}
+
+	public Tree[] getChildren() {
+		return children;
+	}
+
+	// *******************************************************
+	// ITERATEUR
+	// *******************************************************
+	public Iterator<Tree> iterator() {
+		return Arrays.asList(children).iterator();
+	}
+
+	public int nbrChildren() {
+		return children.length;
+	}
+
+	public boolean isLeaf() {
+		return children.length == 0;
+	}
+
+	// *******************************************************
+	// QUESTIONS
+	// *******************************************************
+
+	//vérifier que chaque noeud interne a au moins un fils qui lui est égal
+	public boolean auMoins1EnfantDeMemeValeur(){
+		
+		return true;
+	}
+
+	//Cette méthode imprime à la sortie standard tous les noeuds 
+	//suivis du maximum de la valeur du noeud et de celle de ses ancêtres.
+	public void afficherNoeudsAvecMaximumAncetres() {
+		if (this.getParent() != null) {
+			System.out.println(this.getValue() + " :" + this.getParent().getValue());
+		}
+		
+		for (Tree child : this.getChildren()) {
+			
+		}
+	}
+
+	public static void main(String[] args){
+	    Tree l5 = new Tree(1);
+	    Tree l6 = new Tree(6);
+	    Tree l7 = new Tree(2);
+	    Tree l8 = new Tree(5);
+	    
+	    Tree t2 = new Tree(7, new Tree[]{l5, l6});
+	    Tree l3 = new Tree(12);
+	    Tree t4 = new Tree(6, new Tree[]{l7, l8});
+	    
+	    Tree t1 = new Tree(6, new Tree[]{t2, l3, t4});
+	    t1.auMoins1EnfantDeMemeValeur();
+	}
+}

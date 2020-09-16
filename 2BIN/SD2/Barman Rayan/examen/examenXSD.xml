@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HoraireExamen SYSTEM "examen.dtd">
+<HoraireExamen>
+  <Examen date="2020-05-27" nom="SD2" type="ecrit">
+    <Repartition a="" de="" local="A025"/>
+  </Examen>
+  <Examen date="2020-05-27" nom="SD2" type="ecrit">
+    <Repartition a="" de="" local="A027"/>
+  </Examen>
+  <Examen date="2020-05-28" nom="DB2" type="ecrit">
+    <Repartition a="" de="" local="A027"/>
+  </Examen>
+  <Local nbPlace="42">A025</Local>
+  <Local>A027</Local>
+</HoraireExamen>

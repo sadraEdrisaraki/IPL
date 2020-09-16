@@ -1,0 +1,104 @@
+package be.ipl.pae.main.dao;
+
+
+import static utils.checkUtils.checkObject;
+import static utils.checkUtils.checkString;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import be.ipl.pae.main.biz.TypeUtilisateurEnum;
+import be.ipl.pae.main.biz.dto.UtilisateurDTO;
+
+public class UtilisateurDaoImpl implements UtilisateurDao {
+
+  private DalService dalS;
+  private UtilisateurDTO utilisateur;
+
+  /**
+   * creer et recupere la connection et la factory
+   * 
+   * @throws SQLException
+   */
+  public UtilisateurDaoImpl(UtilisateurDTO utilisateur) throws SQLException {
+
+    dalS = new DalService();
+    this.utilisateur = utilisateur;
+
+  }
+
+  public UtilisateurDaoImpl() {};
+
+  @Override
+  public String getUtilisateurMotDePasse(String pseudo) {
+    checkObject(pseudo);
+    checkString(pseudo);
+
+    PreparedStatement ps = dalS.getPreparedStatement(QueryNamesEnum.GET_MOT_DE_PASSE);
+    try {
+      ps.setString(1, pseudo);
+      ResultSet res = ps.executeQuery();
+      if (res.next()) {
+        return res.getString(1);
+      }
+    } catch (SQLException exception) {
+      exception.printStackTrace();
+    }
+    return null;
+  }
+
+  @Override
+  public UtilisateurDTO getUtilisateur(String pseudo) {
+    checkObject(pseudo);
+    checkString(pseudo);
+
+
+    PreparedStatement ps = dalS.getPreparedStatement(QueryNamesEnum.GET_USER);
+    try {
+      ps.setString(1, pseudo);
+      ResultSet res = ps.executeQuery();
+      if (res.next()) {
+        System.out.println("Utilisateur trouvé !");
+        Timestamp date = res.getTimestamp(10);
+        TypeUtilisateurEnum type = TypeUtilisateurEnum.valueOf(res.getString(8));
+        utilisateur.setId_utilisateur(res.getInt(1));
+        utilisateur.setNom(res.getString(2));
+        utilisateur.setPrenom(res.getString(3));
+        utilisateur.setVille(res.getString(4));
+        utilisateur.setEmail(res.getString(5));
+        utilisateur.setPseudo(res.getString(6));
+        utilisateur.setMot_de_passe(res.getString(7));
+        utilisateur.setType(type);
+        utilisateur.setDate_inscription(date);
+        utilisateur.setId_client(res.getInt(9));
+
+
+        return utilisateur;
+      }
+
+    } catch (SQLException exception) {
+      exception.printStackTrace();
+      System.out.println("Erreur dans getUtilisateur");
+    }
+    return null;
+  }
+
+  @Override
+  public boolean deleteUtilisateur(int id) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean updateUtilisateur(UtilisateurDTO utilisateur) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean lierCompteUtilisateurClient(int idClient, int utilisateur) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+}

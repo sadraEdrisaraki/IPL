@@ -1,0 +1,29 @@
+<html>
+    <body>
+        <button id="myBtn">Click please</button>
+        
+        <!-- Solution N°1 through call to external script -->
+        <script src="DEMO-02.js"></script>
+        <!-- Solution N°2 to call the JS -->
+        <!-- <script> 
+                "use strict";
+                var btn = document.getElementById("myBtn");
+                btn.onclick=function(){
+                    btn.innerText="You clicked on me : )";
+                }
+    
+        </script> -->
+        <!-- Solution N°3 to directly set the JS from a function linked to the HTML attribute-->
+        <!-- <button id="myBtn" onclick="changeBtnName(this)">Click please</button>
+        <script> 
+                // declare the changeBtnName function
+                "use strict";
+                function changeBtnName(btn)
+                    {
+                    btn.innerText="You clicked on me : )";
+                    }
+                
+    
+        </script> -->
+    </body>
+</html>

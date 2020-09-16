@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fichier_personnel SYSTEM "fichePerso.dtd" >
+<fichier_personnel>
+  <personne>
+    <identite>
+    	<nom> Cja</nom>
+    	<prenom></prenom>
+    </identite>
+    <bio>
+      <yeux couleur=""/>
+      <cheveux couleur="" remarque=""/>
+      <age unite="ans">age</age>
+      <poids kg=""/>
+      <groupe_sanguin type="A"/>
+    </bio>
+    <socio>
+      <langue lang="fr"/>
+      <etat_civil type="celibataire"/>
+      <passeport nr="idvalue0"/>
+    </socio>
+  </personne>
+</fichier_personnel>

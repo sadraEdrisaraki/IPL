@@ -1,0 +1,22 @@
+package be.ipl.pae.main.dao;
+
+public enum QueryNamesEnum {
+
+  GET_USER("getUser"), GET_MOT_DE_PASSE("getMotDePasse"), GET_DEVIS_CLIENT(
+      "getDevisClient"), GET_LISTE_AMENAGEMENT("getListeAmenagement"), INSERT_PHOTO(
+          "insertPhoto"), GET_UNIQUE_PSEUDO(
+              "getUniquePseudo"), GET_UNIQUE_MAIL("getUniqueEmail"), INSERT_UTILISATEUR(
+                  "insertUtilisateur"), GET_UTILISATEURS("getUtilisateurs"), GET_CLIENTS(
+                      "getClients"), GET_DEVIS("getDevis"), IS_COMPTE_ACTIVEE("estCompteActivee"),
+  INSERT;
+
+  private String name;
+
+  QueryNamesEnum(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+}

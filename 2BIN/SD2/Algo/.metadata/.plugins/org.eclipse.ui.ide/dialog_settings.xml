@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="SmartImportWizard">
+		<item key="SmartImportRootWizardPage.STORE_HIDE_ALREADY_OPEN" value="false"/>
+		<item key="SmartImportRootWizardPage.STORE_CLOSE_IMPORTED" value="false"/>
+		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
+		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
+		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="D:\Documents7\IPL\SD2\Algo\SD_examen_septembre_2018\graphe_NOM_PRENOM"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Séance 1"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Projet Algo"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Graphe"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Arbres"/>
+			<item value="D:\Documents7\IPL\SD2\Algo\Huffman"/>
+		</list>
+	</section>
+</section>

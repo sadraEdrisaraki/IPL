@@ -1,0 +1,36 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.PhotoDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.dao.DalServivesDbManager;
+import be.ipl.pae.main.dao.PhotoDao;
+import be.ipl.pae.main.exception.DatabaseException;
+
+import java.sql.SQLException;
+
+import config.Inject;
+
+public class PhotoUccImpl implements PhotoUcc {
+
+  @Inject
+  private PhotoDao photoDao;
+  @Inject
+  private BizFactory bizFactory;
+  @Inject
+  private DalServivesDbManager dalServices;
+
+
+  @Override
+  public void enregistrerPhoto(PhotoDto photo) throws SQLException {
+    try {
+      dalServices.startTransaction();
+      photoDao.enregistrerPhoto(photo);
+    } catch (DatabaseException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+  }
+
+}

@@ -1,0 +1,47 @@
+
+public class Equipe{
+
+	private final String nom;
+	private int nbPoints;
+	
+	public Equipe(String nom) {
+		this.nom = nom;
+		this.nbPoints=0;
+	}
+	public int getNbPoints() {
+		return nbPoints;
+	}
+	public void setNbPoints(int nbPoints) {
+		this.nbPoints = nbPoints;
+	}
+	public String getNom() {
+		return nom;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + nbPoints;
+		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Equipe other = (Equipe) obj;
+		if (nbPoints != other.nbPoints)
+			return false;
+		if (nom == null) {
+			if (other.nom != null)
+				return false;
+		} else if (!nom.equals(other.nom))
+			return false;
+		return true;
+	}
+	
+}

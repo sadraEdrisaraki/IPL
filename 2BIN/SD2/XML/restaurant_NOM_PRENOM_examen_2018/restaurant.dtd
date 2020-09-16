@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT restaurant (client+, carte, commande+)>
+
+<!ELEMENT client EMPTY>
+<!ATTLIST client nom CDATA #REQUIRED>
+<!ATTLIST client id ID #REQUIRED>
+<!ATTLIST client adresse CDATA #IMPLIED> 
+
+
+<!ELEMENT carte (plat+)>
+
+<!ELEMENT plat (#PCDATA)>
+<!ATTLIST plat prix CDATA #REQUIRED>
+<!ATTLIST plat monnaie CDATA #FIXED "EUR">
+<!ATTLIST plat id ID #REQUIRED>
+<!ATTLIST plat type (entre|principal|dessert) "principal">
+
+<!ELEMENT commande (ligneCommande+)>
+<!ATTLIST commande client IDREF #REQUIRED>
+<!ATTLIST commande date CDATA #REQUIRED>
+
+<!ELEMENT ligneCommande EMPTY>
+<!ATTLIST ligneCommande plat IDREF #REQUIRED>
+<!ATTLIST ligneCommande quantite CDATA #REQUIRED>

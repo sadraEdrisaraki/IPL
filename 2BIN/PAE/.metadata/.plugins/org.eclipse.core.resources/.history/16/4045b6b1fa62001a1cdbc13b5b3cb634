@@ -1,0 +1,155 @@
+package be.ipl.pae.main.biz.impl;
+
+import java.sql.Timestamp;
+import be.ipl.pae.main.biz.TypeUtilisateurEnum;
+import be.ipl.pae.main.biz.contrainteMetier.UtilisateurBiz;
+
+public class UtilisateurImpl implements UtilisateurBiz {
+
+  private int idUtilisateur;
+  private String nom;
+  private String prenom;
+  private String ville;
+  private String email;
+  private String pseudo;
+  private String motDePasse;
+  private be.ipl.pae.main.biz.TypeUtilisateurEnum type;
+  private int idClient;
+  private Timestamp dateInscription;
+
+  public UtilisateurImpl() {
+
+  }
+
+  public UtilisateurImpl(int idUtilisateur, String nom, String prenom, String ville, String email,
+      String pseudo, String motDePasse, Timestamp dateInscription) {
+    super();
+    this.idUtilisateur = idUtilisateur;
+    this.nom = nom;
+    this.prenom = prenom;
+    this.ville = ville;
+    this.email = email;
+    this.pseudo = pseudo;
+    this.motDePasse = motDePasse;
+    this.dateInscription = dateInscription;
+  }
+
+  public UtilisateurImpl(int idUtilisateur, String nom, String prenom, String ville, String email,
+      String pseudo, String motDePasse, TypeUtilisateurEnum type, int idClient,
+      Timestamp dateInscription) {
+    super();
+    this.idUtilisateur = idUtilisateur;
+    this.nom = nom;
+    this.prenom = prenom;
+    this.ville = ville;
+    this.email = email;
+    this.pseudo = pseudo;
+    this.motDePasse = motDePasse;
+    this.type = type;
+    this.idClient = idClient;
+    this.dateInscription = dateInscription;
+  }
+
+  @Override
+  public int getId_utilisateur() {
+    return idUtilisateur;
+  }
+
+  @Override
+  public void setId_utilisateur(int idUtilisateur) {
+    this.idUtilisateur = idUtilisateur;
+  }
+
+  @Override
+  public String getNom() {
+    return nom;
+  }
+
+  @Override
+  public void setNom(String nom) {
+    this.nom = nom;
+  }
+
+  @Override
+  public String getPrenom() {
+    return prenom;
+  }
+
+  @Override
+  public void setPrenom(String prenom) {
+    this.prenom = prenom;
+  }
+
+  @Override
+  public String getVille() {
+    return ville;
+  }
+
+  @Override
+  public void setVille(String ville) {
+    this.ville = ville;
+  }
+
+  @Override
+  public String getEmail() {
+    return email;
+  }
+
+  @Override
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  @Override
+  public String getPseudo() {
+    return pseudo;
+  }
+
+  @Override
+  public void setPseudo(String pseudo) {
+    this.pseudo = pseudo;
+  }
+
+  @Override
+  public String getMot_de_passe() {
+    return motDePasse;
+  }
+
+  @Override
+  public void setMot_de_passe(String motDePasse) {
+    this.motDePasse = motDePasse;
+  }
+
+  @Override
+  public TypeUtilisateurEnum getType() {
+    return type;
+  }
+
+  @Override
+  public void setType(TypeUtilisateurEnum type) {
+    this.type = type;
+  }
+
+  @Override
+  public int getId_client() {
+    return idClient;
+  }
+
+  @Override
+  public void setId_client(int idClient) {
+    this.idClient = idClient;
+  }
+
+  @Override
+  public Timestamp getDate_inscription() {
+    return dateInscription;
+  }
+
+  @Override
+  public void setDate_inscription(Timestamp dateInscription) {
+    this.dateInscription = dateInscription;
+  }
+
+
+
+}

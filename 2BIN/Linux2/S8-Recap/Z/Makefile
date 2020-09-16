@@ -1,0 +1,1 @@
+CFLAGS =-D_DEFAULT_SOURCE -std=c11 -pedantic -Wall -Wvla -Werror

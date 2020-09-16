@@ -1,0 +1,55 @@
+package be.ipl.pae.main.api;
+
+
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.owlike.genson.Genson;
+import be.ipl.pae.main.exception.BizException;
+import be.ipl.pae.main.ucc.UtilisateurUcc;
+import config.Inject;
+
+
+public class LierUtilisateurClient extends HttpServlet {
+
+  @Inject
+  private UtilisateurUcc utilisateurUcc;
+
+  public LierUtilisateurClient() {}
+
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    System.out.println("Appel au servlet LierUtilisateurClient");
+    String json = "";
+
+    // Verifie l authorisation du client
+    String token = req.getHeader("authorization");
+    if (Utils.verifyToken(token) == null) {
+      Utils.replyWithWrongTokenError(resp, token);
+      return;
+      // stop la requete si token pas valable
+    }
+
+    try {
+      Genson genson = new Genson();
+      Map<String, Object> parametresRequete = genson.deserialize(req.getReader(), HashMap.class);
+      String emailClient = parametresRequete.get("email_client").toString();
+      String emailUtilisateur = parametresRequete.get("email_utilisateur").toString();
+      utilisateurUcc.lierCompteClientUtilisateur(emailClient, emailUtilisateur);
+      json += "{\"success\":\"true\",\"message\":\"liaison reussi\"";
+      json += "}";
+      Utils.replyAsSuccess(resp, json, "liaison des deux comptes reussi");
+    } catch (BizException e) {
+      Utils.replyAsError(resp, HttpServletResponse.SC_CONFLICT, e.getMessage(), e.getMessage());
+      return;
+    }
+
+
+
+  }
+
+
+}

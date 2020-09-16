@@ -1,0 +1,32 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.exception.DatabaseException;
+
+import java.util.ArrayList;
+
+public interface UtilisateurDao {
+  
+  String getUtilisateurMotDePasse(String pseudo);
+
+  UtilisateurDto getUtilisateur(String pseudo);
+
+  UtilisateurDto getUtilisateur(int idUtilisateur) throws DatabaseException;
+
+  boolean deleteUtilisateur(int id);
+
+  boolean updateUtilisateur(UtilisateurDto utilisateur);
+
+  boolean lierCompteUtilisateurClient(int idClient, int utilisateur);
+
+  boolean pseudoEstUnique(String pseudo);
+
+  boolean emailExistePas(String email);
+
+  UtilisateurDto inscrire(UtilisateurDto utilisateurDto);
+
+  ArrayList<UtilisateurDto> getUtilisateurs();
+
+  boolean estCompteActivee(String pseudo);
+
+}

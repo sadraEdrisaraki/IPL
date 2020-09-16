@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<!-- Author Barman Rayan -->
+	<xsl:output method="html" version="html4.01" encoding="ISO-8859-1" />
+	<xsl:template match="/">
+		<html>
+			<head>
+				<title>Collection de nuages</title>
+			</head>
+			<body>
+				<h1> Les nuages</h1>
+				<xsl:apply-templates/>
+				<hr/>
+				<p>* L'espèces castellanus est une espèce de 
+					<xsl:value-of select="count(//espece[.='castellanus'])"/> nuages différents.
+				</p>
+			</body>
+		</html>
+	</xsl:template>
+	
+	<xsl:template match="nuage">
+		<h2><xsl:value-of select="nom"/></h2>
+		<p>Ce type de nuage possède les espèces suivantes:</p>
+		<ul>
+			<xsl:apply-templates select="./espece"/> <!-- applique le template sur les especes du noeuds courant -->
+		</ul>
+		<xsl:choose>
+			<xsl:when test="hydrometeores"> <!-- si le nuage à un fils hydrometeores  -->
+				<p>Hydrométéores : <xsl:value-of select="hydrometeores"/></p>
+			</xsl:when>
+			<xsl:otherwise>
+				<p>Pas d'hydrométéores précisés.</p>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:apply-templates select="altitude">
+			<xsl:with-param name="nomNuage" select="nom"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="nom">
+	</xsl:template>
+	
+	<xsl:template match="espece">
+		<li>
+			<xsl:value-of select="."/>
+			<xsl:if test=".='castellanus'">*</xsl:if>
+		</li>
+	</xsl:template>
+	
+	<xsl:template match="hydrometeores">
+	</xsl:template>
+	
+	<xsl:template match="altitude">
+		<xsl:param name="nomNuage"/>
+		<p>Ce nuage (<xsl:value-of select="$nomNuage"/>) culmine minimum <xsl:value-of select="@min"></xsl:value-of> 
+			mètres et maximum à <xsl:value-of select="@max"/> mètres.
+		</p>
+	</xsl:template>
+	
+</xsl:stylesheet>

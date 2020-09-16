@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="be.ipl.compteurdepintes.MainActivity">
+    <item
+        android:id="@+id/quitter_partie"
+        android:title="@string/menu_quitterPartie" />
+
+    <item
+        android:id="@+id/recommencer_partie"
+        android:title="@string/menu_recommencerPartie" />
+    <item
+        android:id="@+id/configurer_numero"
+        android:title="@string/menu_ConfigurerNumero" />
+
+
+</menu>
+

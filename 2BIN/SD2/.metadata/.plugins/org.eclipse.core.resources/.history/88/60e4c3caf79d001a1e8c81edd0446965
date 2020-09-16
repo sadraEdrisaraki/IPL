@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT bulletins (cours+, bloc+)>
+<!ELEMENT cours EMPTY>
+<!ELEMENT bloc (etudiant*)>
+<!ATTLIST bloc numero (1|2|3) #REQUIRED>
+
+<!ELEMENT etudiant (note*)>
+<!ATTLIST etudiant nom CDATA #REQUIRED>
+<!ATTLIST etudiant anneeNaissance CDATA #IMPLIED>
+
+<!ELEMENT note (#PCDATA)>
+<!ATTLIST note cours IDREF #REQUIRED>
+
+

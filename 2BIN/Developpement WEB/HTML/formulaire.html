@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name = "description" content = "Exercice 1 : page d'acceuil">
+		<meta name = "author" content = "Rayan Barman">
+		<title>Recette HTML</title>
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+	</head>
+	<body>
+		<!-- bannière et menu -->
+		<header>
+			<img src="./images/logo.png" alt="logo">
+			<nav>
+				<ul>
+					<li><a href="index.html">Acceuil</a></li>
+					<li><a target = "_blank" href="https://validator.w3.org">Validateur HTML5</a></li>
+					<li><a target = "_blank" href="http://jigsaw.w3.org/css-validator/">Validateur CSS3</a></li>
+					<li><a target = "_blank" href="https://moodle.vinci.be">Moodle</a></li>
+					<li><a href="formulaire.html">Laissez un commentaire</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section>
+			<h2>Envie de déposer un commentaire ? </h2>
+			<p> Vous pouvez à l'aide de ce formulaire entrez un commentaire ou une remarque sur la recette HTML</p>
+
+			<form>
+				<fieldset>
+					<legend> Informations personnelles: </legend>
+					<label for="name">Votre nom : </label>
+					<input id="name" type="text" placeholder= "Entre ici votre nom" size="50"/> <br>
+					<label for="prenom">Votre prenom : </label>
+					<input id="prenom" type="text" placeholder= "Entre ici votre prenom" size="50"/> <br>
+					<label for="email">Votre Email : </label>
+					<input id="email" type="email" pattern="(^[a-z0-9]+)@([a-z0-9])+(\.)([a-z]{2,4})" placeholder= "Entre ici votre email" size="50"/> <br>
+				</fieldset>
+				<fieldset>
+					<legend>Commentaire: </legend>
+					<textarea id="commentaire" cols="100" rows="5">Entrez ici votre commentaire</textarea>
+				</fieldset>
+				<input type = "submit" value = "Envoyer"/>
+			</form>
+		</section>
+		<footer>
+			<p>Recette créée par Rayan Barman</p>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+package be.ipl.pae.main.api;
+
+import be.ipl.pae.main.biz.factory.BizFactory;
+
+import config.Inject;
+import config.InjectionService;
+
+public class Main {
+
+  @Inject
+  private static BizFactory bizFactory;
+
+  public static void main(String[] args) throws Exception {
+
+    Serveur serveur = new Serveur();
+    InjectionService.injecter(serveur, "prod.properties");
+    serveur.start();
+  }
+
+}

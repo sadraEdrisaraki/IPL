@@ -1,0 +1,49 @@
+package be.ipl.pae.main.api;
+
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.ucc.UtilisateurUcc;
+
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+public class VerificationServlet extends HttpServlet {
+
+  @Inject
+  private UtilisateurUcc utilisateurUcc;
+  @Inject
+  private BizFactory bizFactory;
+
+  public VerificationServlet() {}
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    System.out.println("Appel au servlet Verification");
+
+    String token = req.getHeader("authorization");
+    DecodedJWT jwt = Utils.verifyToken(token);
+    if (jwt == null) {
+      Utils.replyWithWrongTokenError(resp, token);
+      return; // stop la requete si token pas valable
+    }
+
+    Map<String, Claim> claims = jwt.getClaims();
+    Claim id_utilisateur = claims.get("id");
+    int id = id_utilisateur.asInt();
+    UtilisateurDto utilisateurDtoTemp = bizFactory.getUtilisateur();
+    utilisateurDtoTemp = utilisateurUcc.getUtilisateur(id);
+    String json = "{\"autorisation\":\"" + utilisateurDtoTemp.getType().name() + "\" }";
+    String terminalMessage = "verification reussi, envoie des donnees";
+    Utils.replyAsSuccess(resp, json, terminalMessage);
+
+
+  }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library SYSTEM "library.dtd">
+<library>
+  <songlist>
+    <song>
+      <track_ID>0</track_ID>
+      <name>name</name>
+    </song>
+  </songlist>
+  <playlists>
+    <list name="idvalue0">
+      <track_ID>1</track_ID>
+    </list>
+  </playlists>
+</library>

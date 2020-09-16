@@ -1,0 +1,104 @@
+package be.ipl.pae.main.api;
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.biz.dto.DevisDto;
+import be.ipl.pae.main.exception.BizException;
+import be.ipl.pae.main.ucc.ClientUcc;
+import be.ipl.pae.main.ucc.DevisUcc;
+
+import com.owlike.genson.Genson;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+public class IntroductionDevisServlet extends HttpServlet {
+  @Inject
+  private DevisUcc devisUcc;
+  @Inject
+  private DevisDto devisDto;
+  @Inject
+  private ClientDto clientDto;
+  @Inject
+  private ClientUcc clientUcc;
+
+  public IntroductionDevisServlet(DevisDto devisDto, ClientDto clientDto) {
+    this.devisDto = devisDto;
+    this.clientDto = clientDto;
+  }
+
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    System.out.println("Appel au servlet IntroductionDevisServlet");
+    try {
+      String token = req.getHeader("authorization");
+      if (Utils.verifyToken(token) == null) {
+        Utils.replyWithWrongTokenError(resp, token);
+        return; // stop la requete si token pas valable
+      }
+
+      Genson genson = new Genson();
+      Map<String, Object> parametresRequete = genson.deserialize(req.getReader(), HashMap.class);
+
+      // Recuperation de la liste des types d amenagements
+      ArrayList<Object> listeAmenagement =
+          (ArrayList<Object>) parametresRequete.get("liste_amenagement");
+      String listeSerialise = genson.serialize(listeAmenagement);
+      ArrayList<String> listeIdAmenagement = genson.deserialize(listeSerialise, ArrayList.class);
+
+      // Liste d amenagement
+      int[] tabIdTypeAmenagement = new int[listeIdAmenagement.size()];
+      for (int i = 0; i < listeIdAmenagement.size(); i++) {
+        tabIdTypeAmenagement[i] = Integer.parseInt(listeIdAmenagement.get(i).toString());
+      }
+
+      // Donnees recuperee
+      String nom = parametresRequete.get("nom").toString();
+      Timestamp dateDevis = recupererDateDevis(parametresRequete);
+      double montant = recupererMontantTotal(parametresRequete);
+      int dureeTravaux = recupererDureeTravaux(parametresRequete);
+
+
+      // Verification du client
+
+
+
+    } catch (ParseException e) {
+      System.out.println("parsing date error");
+    } catch (BizException e) {
+      Utils.replyAsError(resp, HttpServletResponse.SC_CONFLICT, e.getMessage(), e.getMessage());
+      return;
+    }
+
+  }
+
+  private double recupererMontantTotal(Map<String, Object> parametresRequete) {
+    return Double.parseDouble(parametresRequete.get("montant_total_devis").toString());
+  }
+
+  private int recupererDureeTravaux(Map<String, Object> parametresRequete) {
+    return Integer.parseInt(parametresRequete.get("duree_travaux").toString());
+  }
+
+  private Timestamp recupererDateDevis(Map<String, Object> parametresRequete)
+      throws ParseException {
+    String dateDevis = parametresRequete.get("date_devis").toString();
+    dateDevis = dateDevis.replaceAll("-", "/");
+    Date date = new SimpleDateFormat("yyyy/MM/dd").parse(dateDevis);
+    Timestamp timeStampDateDevis = new Timestamp(date.getTime());
+    return timeStampDateDevis;
+  }
+
+}

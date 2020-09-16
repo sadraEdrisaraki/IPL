@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HoraireExamen SYSTEM "examen.dtd" >
+<HoraireExamen>
+  <Examen date="2001-01-01" nom="" type="ecrit">
+    <Repartition a="" de="" local="l0"/>
+  </Examen>
+  <Local nbPlace="42 places">A025</Local>
+  <Local nbPlace="l0">a027</Local>
+</HoraireExamen>

@@ -1,0 +1,102 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.DevisDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.dao.DalServivesDbManager;
+import be.ipl.pae.main.dao.DevisDao;
+import be.ipl.pae.main.exception.BizException;
+import be.ipl.pae.main.exception.FatalException;
+import be.ipl.pae.main.exception.ListeDevisNonPresentException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import config.Inject;
+
+public class DevisUccImpl implements DevisUcc {
+
+  @Inject
+  private DevisDao devisDao;
+  @Inject
+  private BizFactory bizFactory;
+  @Inject
+  private DalServivesDbManager dalServices;
+
+  public DevisUccImpl() {}
+
+  @Override
+  public ArrayList<DevisDto> getDevisClient(int idClient) {
+    ArrayList<DevisDto> listeDevisClient;
+
+    try {
+      dalServices.startTransaction();
+      listeDevisClient = devisDao.getDevis(idClient);
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+    return listeDevisClient;
+  }
+
+  @Override
+  public ArrayList<DevisDto> getDevisClients() {
+    ArrayList<DevisDto> listeDevisClient;
+
+    try {
+      dalServices.startTransaction();
+      listeDevisClient = devisDao.getDevis();
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+    return listeDevisClient;
+  }
+
+  @Override
+  public ArrayList<HashMap<String, String>> getDevisRealisation() {
+    ArrayList<HashMap<String, String>> listeDevisClient;
+
+    try {
+      dalServices.startTransaction();
+      listeDevisClient = devisDao.getDevisRealisation();
+      if (listeDevisClient == null)
+        throw new ListeDevisNonPresentException("il n'y a pas de devis");
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+    return listeDevisClient;
+  }
+
+  // Utlilise pour remplace le Dao par un Mock de Dao dans les test
+  public void setDevisDao(DevisDao devisDao) {
+    this.devisDao = devisDao;
+  }
+
+  @Override
+  public DevisDto introduireDevis(DevisDto devisDto, int[] tabTypeAmenagement) {
+    try {
+      dalServices.startTransaction();
+      if (!devisDao.introduireDevis(devisDto)) {
+        throw new BizException("introduction du devis echoue");
+      }
+      if (!devisDao.introduireListeAmenagement(devisDto, tabTypeAmenagement)) {
+        throw new BizException("introduction des listes d amenagements echoue");
+      }
+    } catch (FatalException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+    return null;
+  }
+}
+
+

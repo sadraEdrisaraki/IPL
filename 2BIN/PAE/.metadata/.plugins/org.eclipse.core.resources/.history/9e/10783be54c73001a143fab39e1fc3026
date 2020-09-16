@@ -1,0 +1,96 @@
+package be.ipl.pae.main.api;
+
+import javax.servlet.http.HttpServlet;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.webapp.WebAppContext;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import config.Inject;
+import config.InjectionService;
+
+public class Serveur {
+
+  @Inject
+  private BizFactory bizFactory;
+
+  public Serveur() {}
+
+  public void start() {
+
+    WebAppContext context = new WebAppContext();
+    context.setContextPath("/");
+
+    // Login
+    HttpServlet apiLogin = new LoginServlet();
+    context.addServlet(new ServletHolder(apiLogin), "/login");
+    InjectionService.injecter(apiLogin, "prod.properties");
+
+    // Inscription
+    HttpServlet apiInscription = new InscriptionServlet();
+    context.addServlet(new ServletHolder(apiInscription), "/inscription");
+    InjectionService.injecter(apiInscription, "prod.properties");
+
+    // Introduction Devis
+    HttpServlet apiIntroductionDevisServlet = new IntroductionDevisServlet();
+    context.addServlet(new ServletHolder(apiIntroductionDevisServlet), "/introductionDevis");
+    InjectionService.injecter(apiIntroductionDevisServlet, "prod.properties");
+
+    // Verification
+    HttpServlet apiVerification = new VerificationServlet(bizFactory.getUtilisateur());
+    context.addServlet(new ServletHolder(apiVerification), "/verificationToken");
+    InjectionService.injecter(apiVerification, "prod.properties");
+
+    // ListeAmenagement
+    HttpServlet apiListeAmenagement = new ListeAmenagementServlet();
+    context.addServlet(new ServletHolder(apiListeAmenagement), "/listeAmenagement");
+    InjectionService.injecter(apiListeAmenagement, "prod.properties");
+
+    // lierUtilisateurClient
+    HttpServlet lierUtilisateurClient = new LierUtilisateurClient();
+    context.addServlet(new ServletHolder(lierUtilisateurClient), "/gestionClientUtilisateur");
+    InjectionService.injecter(lierUtilisateurClient, "prod.properties");
+
+    // Liste Devis
+    HttpServlet apiAffichageDevisClient = new ListeDevisClientServlet();
+    context.addServlet(new ServletHolder(apiAffichageDevisClient), "/listeDevis");
+    InjectionService.injecter(lierUtilisateurClient, "prod.properties");
+
+    // Recherche
+    HttpServlet apiRecherche = new RechercheServlet();
+    context.addServlet(new ServletHolder(apiRecherche), "/recherche");
+    InjectionService.injecter(apiRecherche, "prod.properties");
+
+    // Introduction Client
+    HttpServlet apiIntroductionClient = new IntroductionClientSerlvet(bizFactory.getClient());
+    context.addServlet(new ServletHolder(apiIntroductionClient), "/introductionClient");
+    InjectionService.injecter(apiIntroductionClient, "prod.properties");
+
+    // Enregistrer Photo
+    HttpServlet apiEnregistrerPhoto = new SendImageServlet(bizFactory.getPhoto());
+    context.addServlet(new ServletHolder(apiEnregistrerPhoto), "/sendImage");
+    InjectionService.injecter(apiEnregistrerPhoto, "prod.properties");
+
+    // Enregistrer Photo
+    HttpServlet apiListeToutDevis = new ListeDevisServlet();
+    context.addServlet(new ServletHolder(apiListeToutDevis), "/listeToutDevis");
+    InjectionService.injecter(apiListeToutDevis, "prod.properties");
+
+    // Default Servlet
+    HttpServlet defaultServlet = new DefaultServlet();
+    context.addServlet(new ServletHolder(defaultServlet), "/");
+
+    Server server = new Server(8080); // TODO : mettre le port dans un fichier
+    context.setResourceBase("public");
+    server.setHandler(context);
+
+    try {
+      server.start();
+      System.out.println("Server Started !");
+    } catch (Exception exception) {
+      System.out.println("Server Fatal Error !!");
+      exception.printStackTrace();
+    }
+
+  }
+}

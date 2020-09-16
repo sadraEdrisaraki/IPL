@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library SYSTEM "stib.dtd">
+<stib>
+  <stations>
+    <station nom="">
+      <stop latitude="0.0" longitude="0.0">stop</stop>
+    </station>
+  </stations>
+  <lignes>
+    <ligne attenteMoyenne="0" destination="" nom="" source="" type="tram">
+      <troncon arrivee="idvalue0" depart="idvalue0" duree="1"/>
+    </ligne>
+  </lignes>
+</stib>

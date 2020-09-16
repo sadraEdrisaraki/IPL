@@ -1,0 +1,3 @@
+Tree Map: 
+ TreeMap has complexity of  o(log n) complexity for containsKey,get ,put and remove operations. 
+ So if you are inserting n elements to Map ,and expecting that elements are added in sorted order then it takes O(nlogn) .

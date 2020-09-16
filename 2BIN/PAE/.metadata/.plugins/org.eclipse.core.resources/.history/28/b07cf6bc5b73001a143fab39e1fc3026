@@ -1,0 +1,21 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.exception.CompteNonActiveeException;
+import be.ipl.pae.main.exception.ListeUtilisateurNonPresentException;
+
+import java.util.ArrayList;
+
+public interface UtilisateurUcc {
+
+  UtilisateurDto seConnecter(String pseudo, String motDePasse) throws CompteNonActiveeException;
+
+  UtilisateurDto getUtilisateur(String pseudo);
+
+  UtilisateurDto getUtilisateur(int idUtilisateur);
+
+  UtilisateurDto inscrireUtilisateur(UtilisateurDto utilisateurDto);
+
+  ArrayList<UtilisateurDto> getUtilisateurs() throws ListeUtilisateurNonPresentException;
+
+}

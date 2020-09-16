@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:output method="html" version="html4.01" encoding="ISO-8859-1" />
+	
+	<xsl:template match="/">
+		<html>
+			<head>
+				<title>Commandes</title>
+			</head>
+			<body>
+				<h1>Le fichier contient <xsl:value-of select="count(//client)"/> clients</h1>
+				<hr/>
+				<xsl:apply-templates select="//client"/>
+			</body>
+		</html>
+	</xsl:template>
+	
+	<xsl:template match="client">
+		<h1>Client <xsl:value-of select="position()"/> <xsl:text>:</xsl:text> <xsl:value-of select="@nom"/></h1>
+		<xsl:apply-templates select="//commande"> <!-- Passe le paramètre comme ça on retrouve la commande du client -->
+			<xsl:with-param name="idClient" select="@id"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="commande">
+		<xsl:param name="idClient"/> <!-- Le parametre qu'on reçoit -->
+		
+		<xsl:if test="@client=$idClient">	<!-- affiche que les commandes adéquate -->
+			<p> 
+				Commande du <xsl:value-of select="@date"/>
+				<ul>
+					<xsl:apply-templates/>
+				</ul>
+			</p>
+		</xsl:if>
+		<xsl:if test="count(//commandes/@client=$idClient)">	<!-- affiche que les commandes adéquate -->
+		</xsl:if>
+		
+	</xsl:template>
+	
+	<xsl:template match="ligneCommande">
+		<!-- Compare l'attribut dans ligne de commande avec celui de plat pour sélectionner les bons plats-->
+		<!-- On pouvait faire la même en passant en paramètre au noeud plat l'id du plat et dans le template plat faire un if-->
+		<xsl:variable name="idPlat" select="@plat"/>
+		<li> <xsl:value-of select="@quantite"/> <xsl:text> </xsl:text> <xsl:value-of select="//plat[@id=$idPlat]"/> </li> <!--  Prend tous les plats avec le bon id-->
+	</xsl:template>
+	
+	<xsl:template match="plat">
+		
+	</xsl:template>
+	
+</xsl:stylesheet>

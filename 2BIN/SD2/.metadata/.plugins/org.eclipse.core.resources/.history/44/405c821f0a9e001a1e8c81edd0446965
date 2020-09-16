@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bulletins SYSTEM "bulletin.dtd" >
+<bulletins> <!-- element racine du document -->
+  <cours code="I0000" nom="Anglais"/>
+  <cours code="I0001" nom="Linux"/>
+  <bloc numero="1">
+    <etudiant anneeNaissance="1997" nom="Rayan">
+      <note cours="I0000">15</note>
+      <note cours="I0001">15</note>
+    </etudiant>
+  </bloc>
+  <bloc numero="2">
+    <etudiant anneeNaissance="1997" nom="Sadra">
+      <note cours="I0001">1</note>
+      <note cours="I0000">15</note>
+    </etudiant>
+  </bloc>
+  <bloc numero="3">
+    <etudiant anneeNaissance="2002" nom="Alex">
+      <note cours="I0000">10</note>
+    </etudiant>
+  </bloc>
+</bulletins>

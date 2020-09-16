@@ -1,0 +1,102 @@
+import java.util.HashMap;
+import java.util.Map;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+
+public class SAXHandler extends DefaultHandler {
+	
+	private int nombreStation, nombreStop, nombreLigne , nombreTroncon;
+	private Ligne tempLigne;
+	private Graph graph = new Graph();
+	private String nomStation;
+	private boolean stationActive , ligneActive, stopActive = false;
+	private int numLigne = 0;
+	private Map<String , Station> mapStringStation = new HashMap<String ,Station>();
+	private Station currentStation;
+	
+	/**
+	 * Méthode appelé quand l'élément est ouvert:  <Personne nom="Rayan">
+	 */
+	@Override
+	public void startElement(String uri , String localName , String qName , Attributes attributes) {
+		
+		numLigne++;
+		
+		// Station
+		if(qName.equalsIgnoreCase("station")) {
+			nomStation = attributes.getValue("nom");
+			currentStation = graph.ajouterStation(attributes.getValue("nom"));
+			nombreStation++;
+			stationActive = true;
+		}
+		
+		// STOP
+		if (qName.equalsIgnoreCase("stop")) {
+			stopActive = true;
+		}
+		
+		// LIGNE
+		if(qName.equalsIgnoreCase("ligne")) {
+			tempLigne = new Ligne(attributes.getValue("nom") , attributes.getValue("source"),
+					attributes.getValue("destination") , attributes.getValue("type") , Integer.parseInt(attributes.getValue("attenteMoyenne")));
+			nombreLigne++;
+			ligneActive = true;
+		}
+		
+		// TRONCONS
+		if(qName.equalsIgnoreCase("troncon")) {
+			Troncon troncon = new Troncon(mapStringStation.get(attributes.getValue("depart")), 
+					mapStringStation.get(attributes.getValue("arrivee")), Integer.parseInt(attributes.getValue("duree")), tempLigne);
+			graph.ajouterTroncon(troncon); 
+			nombreTroncon++;	
+		}
+	}
+	
+	/**
+	 * Méthode appelé quand l'élément se ferme : </Personne>
+	 */
+	@Override
+	public void endElement(String uri , String localName , String qName) {
+		
+		if(qName.equalsIgnoreCase("station")) {
+			stationActive = false;
+		}
+		
+	}
+
+	/**
+	 * Méthode appelé quand il y a des charactères entre les 2 balises :<Personne>Rayan</Personne>
+	 */
+	@Override
+	public void characters(char[] ch, int start, int length) throws SAXException {
+		if(stopActive) {
+			stopActive = false;
+			mapStringStation.put(new String(ch,  start, length), currentStation);
+		}
+		
+	}
+	
+	/**
+	 * Méthode appelé à la fin du document
+	 */
+	@Override
+	public void endDocument() {
+		System.out.println("nombre de station rajouté = " + nombreStation);
+		System.out.println("nombre de stop rajouté = " + nombreStop);
+		System.out.println("nombre de ligne rajouté = " + nombreLigne);
+		System.out.println("nombre de troncon rajouté = " + nombreTroncon);
+	}
+	
+	public Graph getGraph() {
+		return graph;
+		
+	}
+	
+	
+	
+	
+
+}

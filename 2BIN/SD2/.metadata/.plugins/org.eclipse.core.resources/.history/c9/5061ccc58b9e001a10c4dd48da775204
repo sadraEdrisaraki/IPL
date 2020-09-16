@@ -1,0 +1,39 @@
+
+public class Match {
+	
+	public static final int VICTOIRE_DOMICILE=0;
+	public static final int EGALITE=1;
+	public static final int VICTOIRE_VISITEUR=2;
+
+	private final Equipe equipeDomicile;
+	private final Equipe equipeVisiteuse;
+	
+	private final int nbButDomicile;
+	private final int nbButVisiteur;
+	
+	public Match(Equipe equipeDomicile, Equipe equipeVisiteuse, int nbButDomicile, int nbButVisiteur) {
+		if (nbButDomicile<0||nbButVisiteur<0) throw new IllegalArgumentException();
+		this.equipeDomicile = equipeDomicile;
+		this.equipeVisiteuse = equipeVisiteuse;
+		this.nbButDomicile = nbButDomicile;
+		this.nbButVisiteur = nbButVisiteur;
+	}
+	public Equipe getEquipeDomicile() {
+		return equipeDomicile;
+	}
+	public Equipe getEquipeVisiteuse() {
+		return equipeVisiteuse;
+	}
+	public int getNbButDomicile() {
+		return nbButDomicile;
+	}
+	public int getNbButVisiteur() {
+		return nbButVisiteur;
+	}
+	public int obtenirResultat() {
+		if (nbButDomicile>nbButVisiteur) return VICTOIRE_DOMICILE;
+		if (nbButDomicile==nbButVisiteur) return EGALITE;
+		return VICTOIRE_VISITEUR;
+	}	
+	
+}

@@ -1,0 +1,87 @@
+package be.ipl.pae.main.api;
+
+
+import be.ipl.pae.main.biz.dto.DevisDto;
+import be.ipl.pae.main.ucc.DevisUcc;
+import be.ipl.pae.main.ucc.UtilisateurUcc;
+
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.owlike.genson.Converter;
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Map;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+public class ListeDevisClientServlet extends HttpServlet {
+
+  @Inject
+  private DevisUcc devisUcc;
+
+  @Inject
+  private UtilisateurUcc utilisateurUcc;
+
+  public ListeDevisClientServlet() {}
+
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    System.out.println("\nAppel au servlet ListeDevisClient");
+    String json = "";
+
+    DecodedJWT jwt;
+    try {
+      // Verification token
+      String token = req.getHeader("authorization");
+      jwt = Utils.verifyToken(token);
+      if (jwt == null) {
+        Utils.replyWithWrongTokenError(resp, token);
+        return;
+      }
+      // on creer le converter pour serialis les dates
+
+      Converter<Date> converter = ConverteurJson.getConverteurDateJson();
+
+      Genson genson =
+          new GensonBuilder().setSkipNull(true).withConverter(converter, Date.class).create();
+      Map<String, Claim> claims = jwt.getClaims();
+      int idUtilisateur = claims.get("id").asInt();
+
+
+      int idClient = utilisateurUcc.getUtilisateur(idUtilisateur).getId_client();
+
+      ArrayList<DevisDto> listeDevisClient = devisUcc.getDevisClient(idClient);
+      if (listeDevisClient == null) {
+        System.out.println("erreur lors de la recuperation de la liste de devis le servlet");
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      } else {
+        json = genson.serialize(listeDevisClient);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
+        System.out.println(json);
+      }
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      json = "{\"success\":\"false\", \"error\":";
+      json += exception.getMessage();
+      json += "}";
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      resp.getWriter().write(json);
+
+    }
+
+  }
+}

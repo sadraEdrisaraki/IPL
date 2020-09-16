@@ -1,0 +1,123 @@
+package be.ipl.pae.main.api;
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.exception.FatalException;
+import be.ipl.pae.main.ucc.ClientUcc;
+import be.ipl.pae.main.ucc.DevisUcc;
+import be.ipl.pae.main.ucc.UtilisateurUcc;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.owlike.genson.Converter;
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+public class RechercheServlet extends HttpServlet {
+
+  @Inject
+  private UtilisateurUcc utilisateurUcc;
+  @Inject
+  private ClientUcc clientUcc;
+  @Inject
+  private DevisUcc devisUcc;
+
+  /**
+   * Construit la servlet de recherche d'utilisateur.
+   */
+  public RechercheServlet() {}
+
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+    System.out.println("\nAppel au servlet Recherche\n");
+    String json = "";
+    // on creer le converter pour serialise les dates
+    Converter<Date> converteurDate = ConverteurJson.getConverteurDateJson();
+
+    Genson genson =
+        new GensonBuilder().setSkipNull(true).withConverter(converteurDate, Date.class).create();
+    Map<String, String> map = genson.deserialize(req.getReader(), HashMap.class);
+    String selectRechercheValue = map.get("selectRecherche");
+    DecodedJWT jwt;
+    try {
+      // Verification token
+
+      String token = req.getHeader("authorization");
+      jwt = Utils.verifyToken(token);
+      if (jwt == null) {
+        Utils.replyWithWrongTokenError(resp, token);
+        return;
+      }
+
+      // switch case pour savoir quel recherche retourner
+      switch (selectRechercheValue) {
+        case "1":
+          ArrayList<HashMap<String, String>> listeDevisArrayList = devisUcc.getDevisRealisation();
+          json += genson.serialize(listeDevisArrayList);
+          resp.setContentType("application/json");
+          resp.setCharacterEncoding("UTF-8");
+          resp.setStatus(HttpServletResponse.SC_OK);
+          resp.getWriter().write(json);
+          System.out.println(json);
+          break;
+        case "2":
+          // converteur pour serialiser les Timestamp
+          Converter<Timestamp> converteurTimestamp = ConverteurJson.getConverteurTimestampJson();
+
+          Genson gensonUtilisateur = new GensonBuilder().setSkipNull(true)
+              .withConverter(converteurTimestamp, Timestamp.class).create();
+
+          ArrayList<UtilisateurDto> listeUtilisateur = utilisateurUcc.getUtilisateurs();
+
+          json += gensonUtilisateur.serialize(listeUtilisateur);
+          resp.setContentType("application/json");
+          resp.setCharacterEncoding("UTF-8");
+          resp.setStatus(HttpServletResponse.SC_OK);
+          resp.getWriter().write(json);
+          System.out.println(json);
+          break;
+
+        case "3":
+
+          ArrayList<ClientDto> listeClient = clientUcc.getClients();
+            json += genson.serialize(listeClient);
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
+            System.out.println(json);
+          }
+          break;
+
+        default:
+          json = "{\"success\":\"false\"";
+          json += "}";
+          resp.setContentType("application/json");
+          resp.setCharacterEncoding("UTF-8");
+          resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+          resp.getWriter().write(json);
+      }
+
+
+
+    }catch(
+
+  FatalException fatalException)
+  {
+    Utils.replyAsError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+        fatalException.getMessage(), "erreur Serveur - DB");
+  }
+
+}}

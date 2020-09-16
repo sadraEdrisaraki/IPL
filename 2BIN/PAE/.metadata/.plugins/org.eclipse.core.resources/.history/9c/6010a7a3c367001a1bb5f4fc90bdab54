@@ -1,0 +1,42 @@
+package be.ipl.pae.main.api;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator.Builder;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+public class Utils {
+
+  private static final String JWTSECRET = "PROJETAE2019";
+  private static final String EMETTEUR = "auth0";
+
+  public static final Algorithm algorithm = Algorithm.HMAC256(JWTSECRET);
+
+  /**
+   * Cree le token
+   * 
+   * @return le builder du token
+   */
+  public static Builder createToken() {
+    return JWT.create().withIssuer(EMETTEUR);
+  }
+
+  /**
+   * Verifie le token donnee en parametre, Si le token founi n'est pas bon une
+   * JWTVerificationException sera lancer
+   * 
+   * @param token Le token a verifier
+   * @return Un Objet de type DecodedJWT
+   * @throws JWTVerificationException
+   */
+  public static boolean verifyToken(String token) {
+    try {
+      JWTVerifier verifier = JWT.require(algorithm).withIssuer(EMETTEUR).build();
+      DecodedJWT jwt = verifier.verify(token);
+    } catch (JWTVerificationException exception) {
+      // TODO: handle exception
+    }
+  }
+}

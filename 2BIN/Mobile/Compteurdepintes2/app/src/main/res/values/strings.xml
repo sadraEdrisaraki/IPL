@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">Compteur de pintes</string>
+    <string name="menu_quitterPartie">Quitter partie</string>
+    <string name="menu_recommencerPartie">Recommencer partie</string>
+    <string name="menu_ConfigurerNumero">Configurer le numéro</string>
+    <string name="textVuePintes">Compteur de pintes ingurgitée :</string>
+    <string name="buttonCompteur">+1</string>
+    <string name="txt_1">"La soirée commence"</string>
+    <string name="txt_5">"le rythme s'accélère"</string>
+    <string name="txt_8">"Vous devenez super courageux, plus rien ne vous fait peur "</string>
+    <string name="txt_10">"Vous êtes super séduisant "</string>
+    <string name="txt_12">"Vous êtes maintenant invulnérable "</string>
+    <string name="txt_15">"Vous êtes maintenant invisible "</string>
+    <string name="txt_18">"¾ du casier "</string>
+    <string name="txt_24">"Yeah un casier ! "</string>
+    <string name="txt_30">"Pour rappel, les urgences c’est le numéro 100"</string>
+    <string name="txt_50">" I can see dead people"</string>
+    <string name="HighScore_label">HighScore: </string>
+    <string name="newHighScore">"Nouveau highscore !"</string>
+    <string name="EmergencySMS">"Ca ne va pas maman, vient me chercher"</string>
+
+    <string-array name="textes">
+        <item>"La soirée commence"</item>
+        <item>"La soirée commence"</item>
+        <item>"La soirée commence"</item>
+        <item>"La soirée commence"</item>
+        <item>"le rythme s'accélère"</item>
+        <item>"le rythme s'accélère"</item>
+        <item>"le rythme s'accélère"</item>
+        <item>"Vous devenez super courageux, plus rien ne vous fait peur"</item>
+        <item>"Vous devenez super courageux, plus rien ne vous fait peur"</item>
+        <item>"Vous êtes super séduisant "</item>
+        <item>"Vous êtes super séduisant "</item>
+        <item>"Vous êtes maintenant invulnérable "</item>
+        <item>"Vous êtes maintenant invulnérable "</item>
+        <item>"Vous êtes maintenant invulnérable "</item>
+        <item>"Vous êtes maintenant invisible "</item>
+        <item>"Vous êtes maintenant invisible "</item>
+        <item>"Vous êtes maintenant invisible "</item>
+        <item>"¾ du casier "</item>
+        <item>"¾ du casier "</item>
+        <item>"¾ du casier "</item>
+        <item>"¾ du casier "</item>
+        <item>"¾ du casier "</item>
+        <item>"¾ du casier "</item>
+        <item>"Yeah un casier ! "</item>
+        <item>"Yeah un casier ! "</item>
+        <item>"Yeah un casier ! "</item>
+        <item>"Yeah un casier ! "</item>
+        <item>"Yeah un casier ! "</item>
+        <item>"Yeah un casier ! "</item>
+        <item>"Yeah un casier ! "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>"Pour rappel, les urgences c’est le numéro 100 "</item>
+        <item>" I can see dead people"</item>
+    </string-array>
+</resources>

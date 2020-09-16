@@ -1,0 +1,80 @@
+package be.ipl.pae.main.api;
+
+import be.ipl.pae.main.biz.dto.PhotoDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.exception.FatalException;
+import be.ipl.pae.main.ucc.PhotoUcc;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.owlike.genson.Genson;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.HashMap;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+public class SendImageServlet extends HttpServlet {
+
+  @Inject
+  private PhotoUcc photoUcc;
+
+  @Inject
+  private BizFactory bizFactory;
+
+  public SendImageServlet() {}
+
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+
+    DecodedJWT jwt;
+
+    String token = req.getHeader("authorization");
+    jwt = Utils.verifyToken(token);
+    if (jwt == null) {
+      Utils.replyWithWrongTokenError(resp, token);
+      return;
+    }
+
+
+    Genson genson = new Genson();
+    HashMap<String, String> map = genson.deserialize(req.getReader(), HashMap.class);
+    System.out.println(req.getReader());
+
+    String image = map.get("image");
+    String dateImage = map.get("date_image");
+    String StringidTypeAmenagement = map.get("id_amenagement");
+    String StringidDevis = map.get("id_devis");
+    Date date = Date.valueOf(dateImage);
+    Timestamp dateTimestamp = new Timestamp(date.getTime());
+
+
+    PhotoDto pDto = bizFactory.getPhoto();
+
+    System.out.println("DATE : " + dateTimestamp);
+    pDto.setPhoto(image);
+    pDto.setDate_photo(dateTimestamp);
+    pDto.setId_devis(Integer.valueOf(StringidDevis));
+    pDto.setId_amenagement(Integer.valueOf(StringidTypeAmenagement));
+
+    try {
+      photoUcc.enregistrerPhoto(pDto);
+    } catch (FatalException fatalException) {
+      Utils.replyAsError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+          fatalException.getMessage(), "erreur Serveur - DB");
+    }
+    }
+  }
+
+}
+
+

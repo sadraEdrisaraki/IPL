@@ -1,0 +1,183 @@
+package be.ipl.pae.main.api;
+
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.exception.BizException;
+import be.ipl.pae.main.exception.EmailDejaExistantException;
+import be.ipl.pae.main.exception.PseudoDejaExistantException;
+import be.ipl.pae.main.ucc.UtilisateurUcc;
+
+import com.auth0.jwt.JWTCreator.Builder;
+import com.owlike.genson.Genson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+public class InscriptionServlet extends HttpServlet {
+
+  @Inject
+  private UtilisateurUcc utilisateurUcc;
+  @Inject
+  private BizFactory bizFactory;
+
+  private boolean erreur = false;
+
+  public InscriptionServlet() {}
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    System.out.println("appel au servlet inscription");
+    String json = "";
+
+    // Recuperation des donnees de la requete
+    StringBuffer stringBuffer = new StringBuffer();
+    String line = null;
+    try {
+      BufferedReader reader = req.getReader();
+      while ((line = reader.readLine()) != null) {
+        stringBuffer.append(line);
+      }
+      System.out.println("POST DATA : " + stringBuffer.toString());
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return;
+    }
+
+    Genson genson = new Genson();
+    Map<String, Object> map = genson.deserialize(stringBuffer.toString(), Map.class);
+
+
+    // Verification cote serveur
+    String messageErreurVerification = chercherDonneeManquanteOuIncorrecte(map);
+    if (messageErreurVerification != null) {
+      json += "{\"success\":\"false\",\"message\":\"" + messageErreurVerification + "\"";
+      json += "}";
+      System.out.println(json);
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_CONFLICT);
+      resp.getWriter().write(json);
+      return;
+    }
+
+
+    UtilisateurDto utilisateurTemp = bizFactory.getUtilisateur();
+
+    // Remplit le DTO
+    utilisateurTemp.setPseudo(map.get("pseudo").toString());
+    utilisateurTemp.setMot_de_passe(map.get("mot_de_passe").toString());
+    utilisateurTemp.setNom(map.get("nom").toString());
+    utilisateurTemp.setPrenom(map.get("prenom").toString());
+    utilisateurTemp.setVille(map.get("ville").toString());
+    utilisateurTemp.setEmail(map.get("email").toString());
+    System.out.println(
+        "Utilisateur souhaite s inscrire avec les donnees = " + utilisateurTemp.toString());
+
+    // Gestion des erreurs
+    try {
+      utilisateurTemp = utilisateurUcc.inscrireUtilisateur(utilisateurTemp);
+    } catch (EmailDejaExistantException emailDejaExistantException) {
+      json +=
+          "{\"success\":\"false\",\"message\":\"" + emailDejaExistantException.getMessage() + "\"";
+      erreur = true;
+
+    } catch (PseudoDejaExistantException pseudoDejaExistantException) {
+      json +=
+          "{\"success\":\"false\",\"message\":\"" + pseudoDejaExistantException.getMessage() + "\"";
+      erreur = true;
+    } catch (BizException exception) {
+      // TODO
+    }
+
+    if (erreur) {
+      json += "}";
+      System.out.println(json);
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_CONFLICT);
+      resp.getWriter().write(json);
+    } else {// Verification reussi
+
+      // Renvoyer un token sur base de l id que l on recoit
+      Builder tokenBuilder = Utils.createToken();
+      // Rajoute dans le token l id de l utilisateur
+      tokenBuilder.withClaim("id", utilisateurTemp.getId_utilisateur());
+
+      String token = tokenBuilder.sign(Utils.algorithm);
+
+      json = "{" + "\"success\":\"true\", " + "\"data\": {" + "\"token\": \"" + token + "\" , "
+          + "\"user\": {" + "\"pseudo\":\"" + utilisateurTemp.getPseudo() + "\", " + "\"name\": \""
+          + utilisateurTemp.getNom() + "\", " + "\"firstname\": \"" + utilisateurTemp.getPrenom()
+          + "\", " + "\"email\": \"" + utilisateurTemp.getEmail() + "\" " + "}" + "}" + "}";
+      System.out.println("INSCRIPTION UTILISATEUR POST : " + json);
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_OK);
+      resp.getWriter().write(json);
+    }
+    erreur = false;
+  }
+
+  private String chercherDonneeManquanteOuIncorrecte(Map<String, Object> map) {
+
+    // pseudo
+    if (!map.containsKey("pseudo")) {
+      return "pseudo manquant";
+    }
+    if (map.get("pseudo").toString().length() == 0) {
+      return "pseudo vide";
+    }
+
+    // mot de passe
+    if (!map.containsKey("mot_de_passe")) {
+      return "mot de passe manquant";
+    }
+    if (map.get("mot_de_passe").toString().length() == 0) {
+      return "mot de passe vide";
+    }
+
+    // nom
+    if (!map.containsKey("nom")) {
+      return "nom manquant";
+    }
+    if (map.get("mot_de_passe").toString().length() == 0) {
+      return "nom vide";
+    }
+
+    // prenom
+    if (!map.containsKey("prenom")) {
+      return "prenom manquant";
+    }
+    if (map.get("prenom").toString().length() == 0) {
+      return "prenom vide";
+    }
+
+    // ville
+    if (!map.containsKey("ville")) {
+      return "ville manquant";
+    }
+    if (map.get("ville").toString().length() == 0) {
+      return "ville vide";
+    }
+
+    // email
+    if (!map.containsKey("email")) {
+      return "email manquant";
+    }
+    if (map.get("email").toString().length() == 0) {
+      return "email vide";
+    }
+
+    return null;
+  }
+
+}

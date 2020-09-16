@@ -1,0 +1,44 @@
+package be.ipl.pae.main.api;
+
+import java.util.ArrayList;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.owlike.genson.Genson;
+import be.ipl.pae.main.biz.dto.DevisDTO;
+import be.ipl.pae.main.ucc.DevisUcc;
+
+public class ListeDevisClientServlet extends HttpServlet {
+  private DevisUcc devisUcc;
+
+
+  public ListeDevisClientServlet(DevisUcc devisUcc) {
+    this.devisUcc = devisUcc;
+  }
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    System.out.println("Appel au servlet ListeAmenagement");
+
+    try {
+      Utils.decodeToken(req.getParameter("token"));
+      Genson genson = new Genson();
+      // je mets 1 en parametre pour le moment pour voir si ca fonctionait
+      ArrayList<DevisDTO> listeDevisClient = devisUcc.getDevisClient(1);
+      if (listeDevisClient == null) {
+        System.out.println("erreur lors de la recuperation de la liste de devis le servlet");
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      } else {
+        String json = genson.serialize(listeDevisClient);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
+        System.out.println(json);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+
+    }
+
+  }
+}

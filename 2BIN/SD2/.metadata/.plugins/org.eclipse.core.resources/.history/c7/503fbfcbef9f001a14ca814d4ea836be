@@ -1,0 +1,67 @@
+import java.io.File;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class Graph {
+
+	private LinkedList<Troncon> troncons; // list d'arcs
+
+	//lit le fichier et remplit la structure de données troncons
+	public Graph(String xmlFile) throws Exception {
+		
+		try {
+			File file = new File(xmlFile);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			
+			Document document = dBuilder.parse(file);
+			
+			NodeList troncons = document.getElementsByTagName("troncon");
+			
+			for (int i= 0; i < troncons.getLength(); i++) {
+				Node nTroncon = troncons.item(i);
+				Element eTroncon = (Element) nTroncon;
+				String ligneDuTroncon = ((Element) nTroncon.getParentNode()).getAttribute("nom");
+				
+				Troncon tr = new Troncon(ligne, depart, arrivee, duree)
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void bfs(String depart, String arrivee) {
+		Set<String> visited = new HashSet<String>();
+		Queue<String> queue = new LinkedList<String>();
+		queue.add(depart);
+		visited.add(depart);
+		while (!queue.isEmpty()) {
+			String cur = queue.poll();
+			System.out.print(cur + " ");
+			for (Troncon t : troncons) {
+				if (t.getDepart().equals(cur) && !visited.contains(t.getArrivee())) {
+					queue.add(t.getArrivee());
+					visited.add(t.getArrivee());
+				}
+			}
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		Graph g = new Graph("stib.xml");
+		g.bfs("MALIBRAN", "ALMA");
+	}
+}

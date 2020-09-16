@@ -1,0 +1,61 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.DevisDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.dao.DalServivesDbManager;
+import be.ipl.pae.main.dao.DevisDao;
+import be.ipl.pae.main.exception.ListeDevisNonPresentException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import config.Inject;
+
+public class DevisUccImpl implements DevisUcc {
+
+  @Inject
+  private DevisDao devisDao;
+  @Inject
+  private BizFactory bizFactory;
+  @Inject
+  private DalServivesDbManager dalServices;
+
+  public DevisUccImpl() {}
+
+  @Override
+  public ArrayList<DevisDto> getDevisClient(int idClient) throws ListeDevisNonPresentException {
+    ArrayList<DevisDto> listeDevisClient = devisDao.getDevis(idClient);
+    if (listeDevisClient == null) {
+      throw new ListeDevisNonPresentException("il n'y a pas de devis pour ce client");
+    }
+    return listeDevisClient;
+  }
+
+  @Override
+  public ArrayList<DevisDto> getDevisClients() throws ListeDevisNonPresentException {
+    ArrayList<DevisDto> listeDevisClient = devisDao.getDevis();
+    if (listeDevisClient == null) {
+      throw new ListeDevisNonPresentException("il n'y a pas de devis");
+    }
+    return listeDevisClient;
+  }
+
+  @Override
+  public ArrayList<HashMap<String, String>> getDevisRealisation()
+      throws ListeDevisNonPresentException {
+    ArrayList<HashMap<String, String>> listeDevisClient = devisDao.getDevisRealisation();
+    if (listeDevisClient == null) {
+      throw new ListeDevisNonPresentException("il n'y a pas de devis");
+    }
+    return listeDevisClient;
+  }
+
+  // Utlilise pour remplace le Dao par un Mock de Dao dans les test
+  public void setDevisDao(DevisDao devisDao) {
+    this.devisDao = devisDao;
+  }
+
+
+}
+
+

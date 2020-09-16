@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<restaurant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="restaurant.xsd">
+  <client adresse="" id="cl0001" nom=""/>
+  <carte>
+    
+  </carte>
+  <commande client="cl0001" date="2001-01-01">
+    <ligneCommande plat="p001" quantite="1"/>
+  </commande>
+</restaurant>

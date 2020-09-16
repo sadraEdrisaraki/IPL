@@ -1,0 +1,38 @@
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
+public class Inscription {
+	
+	private Ecole[] ecoles; // retient toutes les écoles
+	private Map<Ecole, Queue<Eleve>> demandes;
+	private Map<Eleve, Set<Ecole>> demandesEleves;
+	//vous pouvez rajouter des attributs
+	
+	//à compléter: initialisation des attributs
+	public Inscription(Ecole... ecoles){
+		this.ecoles=ecoles;
+		this.demandes = new HashMap<Ecole, Queue<Eleve>>();
+		this.demandesEleves = new HashMap<Eleve, Set<Ecole>>();
+		
+		for (int i = 0; i < this.ecoles.length; i++) {
+			this.demandes.put(this.ecoles[i], new LinkedList<Eleve>());
+		}
+	}
+	
+	// enregistre la demande d'inscription d'un élève à une école.
+	// Lance une RunTimeException si l'élève a déjà fait 3 demandes d'inscription
+	// Complexité: ? 
+	public void demandeInscription(Eleve eleve,Ecole ecole){
+	}
+	
+	// parcourt les demandes d'inscription des élèves et inscrit les élèves selon
+	// l'ordre premier arrivé premier servi. Pour inscrire un élève,
+	// il faut appeler la méthode ajouterEleve de la classe Ecole. 
+	// Les élèves déjà inscrits dans une autre école ne sont pas inscrits.
+	// Complexité: ?
+	public void remplirEcole(Ecole ecole) {
+	}
+}

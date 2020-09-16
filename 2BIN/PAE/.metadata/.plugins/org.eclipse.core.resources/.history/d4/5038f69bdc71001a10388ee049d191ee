@@ -1,0 +1,182 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.EtatAmenagements;
+import be.ipl.pae.main.biz.dto.DevisDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.exception.FatalException;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import config.Inject;
+
+public class DevisDaoImpl implements DevisDao {
+
+  @Inject
+  private DalServices dalS;
+  @Inject
+  private BizFactory bizFactory;
+
+
+  /**
+   * Constructeur de devisDaoImpl.
+   */
+  public DevisDaoImpl() {}
+
+  private DevisDto setDevisDTO(int idDevis, int idClient, Timestamp dateDevis, double montantTotal,
+      int dureeTravaux, EtatAmenagements etat, Timestamp dateDebutTravaux, boolean visibilite) {
+    DevisDto devisDto = bizFactory.getDevis();
+    devisDto.setId_devis(idDevis);
+    devisDto.setId_client(idClient);
+    devisDto.setDate_devis(dateDevis);
+    devisDto.setMontant_total(montantTotal);
+    devisDto.setDuree_travaux(dureeTravaux);
+    devisDto.setEtat(etat);
+    devisDto.setDate_debut_travaux(dateDebutTravaux);
+    devisDto.setVisibilite_amenagement(visibilite);
+    return devisDto.clone();
+  }
+
+  // on recupere tout les devis d un client pour les ajouter dans une arraylist
+  @Override
+  public ArrayList<DevisDto> getDevis(int idClient) {
+    ArrayList<DevisDto> listeDevis = new ArrayList<DevisDto>();
+    PreparedStatement ps = dalS.getPreparedStatement("SELECT * FROM devis d WHERE d.id_client=? ");
+    try {
+      ps.setInt(1, idClient);
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+
+    try (ResultSet res = ps.executeQuery()) {
+      while (res.next()) {
+
+        listeDevis.add(setDevisDTO(res.getInt(1), res.getInt(2), res.getTimestamp(3),
+            res.getDouble(4), res.getInt(5), EtatAmenagements.valueOf(res.getString(6)),
+            res.getTimestamp(7), res.getBoolean(8)));
+      }
+
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+
+    return listeDevis;
+  }
+
+  @Override
+  public ArrayList<HashMap<String, String>> getDevisRealisation() {
+
+    ArrayList<HashMap<String, String>> listeDevisRealisation =
+        new ArrayList<HashMap<String, String>>();
+
+    PreparedStatement ps = dalS.getPreparedStatement("\r\n" + "SELECT DISTINCT c.prenom , \r\n"
+        + "    (SELECT string_agg(ta.nom , ', ')as type_amenagement FROM types_amenagements ta , clients c1, \r\n"
+        + "     devis d1 ,amenagement_par_devis ad\r\n"
+        + "     WHERE d1.id_devis = d.id_devis AND d1.id_client = c1.id_client\r\n"
+        + "     AND d1.id_devis = ad.id_devis AND ad.id_amenagement = ta.id_amenagement),\r\n"
+        + "d.date_devis,d.id_devis, d.duree_travaux , d.montant_total , d.etat_des_amenagements\r\n"
+        + ",COUNT( \r\n" + "    (SELECT p.id_photo \r\n" + "     FROM photos p\r\n"
+        + "     WHERE p.id_devis = d.id_devis AND p.date_photo <= d.date_debut_des_travaux)\r\n"
+        + ") as photos_avant,\r\n" + "COUNT( \r\n" + "    (SELECT p.id_photo \r\n"
+        + "     FROM photos p\r\n"
+        + "     WHERE p.id_devis = d.id_devis AND p.date_photo > d.date_debut_des_travaux)\r\n"
+        + ") as photos_apres,\r\n" + "COUNT( \r\n" + "    (SELECT p.id_photo \r\n"
+        + "     FROM photos p\r\n"
+        + "     WHERE p.id_devis = d.id_devis AND p.visibilite = TRUE)\r\n"
+        + ") as photo_visible,\r\n" + "    CASE WHEN d.photo_prefere IS NOT NULL THEN 'Oui'\r\n"
+        + "    ELSE ''\r\n" + "    END\r\n" + "    AS photo_prefere,\r\n"
+        + "    d.date_debut_des_travaux\r\n" + "FROM clients c , devis d\r\n"
+        + "WHERE d.id_client = c.id_client\r\n" + "GROUP BY 1,2,3,4");
+
+    try (ResultSet res = ps.executeQuery()) {
+      String prenom = "";
+      String typeAmenagement = "";
+      String dateDevis = "";
+      String idDevis = "";
+      String dureeTravaux = "";
+      String montantTotal = "";
+      String etatDesAmenagements = "";
+      String nombrePhotosAvant = "";
+      String nombrePhotosApres = "";
+      String nombrePhotosVisible = "";
+      String photoPrefere = "";
+      String dateDebutTravaux = "";
+      while (res.next()) {
+        HashMap<String, String> devisRealisation = new HashMap<String, String>();
+        /* On attribut les champs de la requete aux variables */
+        prenom = res.getString(1);
+        typeAmenagement = res.getString(2);
+        dateDevis = res.getDate(3).toString();
+        idDevis = String.valueOf(res.getInt(4));
+        dureeTravaux = String.valueOf(res.getInt(5));
+        montantTotal = String.valueOf(res.getDouble(6));
+        etatDesAmenagements = res.getString(7);
+        nombrePhotosAvant = String.valueOf(res.getInt(8));
+        nombrePhotosApres = String.valueOf(res.getInt(9));
+        nombrePhotosVisible = String.valueOf(res.getString(10));
+        photoPrefere = res.getString(10);
+        dateDebutTravaux = res.getString(11);
+        /* ajout des strings des realisations dans la list */
+        devisRealisation.put("prenom", prenom);
+        devisRealisation.put("typeAmenagement", typeAmenagement);
+        devisRealisation.put("dateDevis", dateDevis);
+        devisRealisation.put("idDevis", idDevis);
+        devisRealisation.put("dureeTravaux", dureeTravaux);
+        devisRealisation.put("montantTotal", montantTotal);
+        devisRealisation.put("etatDesAmenagements", etatDesAmenagements);
+        devisRealisation.put("nombrePhotosAvant", nombrePhotosAvant);
+        devisRealisation.put("nombrePhotosApres", nombrePhotosApres);
+        devisRealisation.put("nombrePhotosVisible", nombrePhotosVisible);
+        devisRealisation.put("photoPrefere", photoPrefere);
+        devisRealisation.put("dateDebutTravaux", dateDebutTravaux);
+        listeDevisRealisation.add(devisRealisation);
+      }
+      return listeDevisRealisation;
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+
+    return null;
+  }
+
+
+  @Override
+  public ArrayList<DevisDto> getDevis() {
+    ArrayList<DevisDto> listeDevis = new ArrayList<DevisDto>();
+    PreparedStatement ps = dalS.getPreparedStatement("SELECT * FROM devis");
+    try {
+      ResultSet res = ps.executeQuery();
+      while (res.next()) {
+        listeDevis.add(setDevisDTO(res.getInt(1), res.getInt(2), res.getTimestamp(3),
+            res.getDouble(4), res.getInt(5), EtatAmenagements.valueOf(res.getString(6)),
+            res.getTimestamp(7), res.getBoolean(8)));
+      }
+
+    } catch (SQLException exception) {
+      exception.printStackTrace();
+    }
+    return listeDevis;
+
+  }
+
+
+  @Override
+  public boolean deleteDevis(int idClient) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+
+  @Override
+  public boolean updateDevis(DevisDto utilisateur) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+
+
+}

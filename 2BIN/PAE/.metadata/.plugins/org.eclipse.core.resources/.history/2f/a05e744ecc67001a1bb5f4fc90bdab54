@@ -1,0 +1,88 @@
+package be.ipl.pae.main.api;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.owlike.genson.Genson;
+import be.ipl.pae.main.biz.dto.TypeAmenagementDTO;
+import be.ipl.pae.main.biz.impl.TypeAmenagementImpl;
+import be.ipl.pae.main.dao.PhotoDao;
+import be.ipl.pae.main.dao.TypeAmenagementDao;
+import be.ipl.pae.main.dao.TypeAmenagementDaoImpl;
+
+public class sendImageServlet extends HttpServlet {
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+
+    try {
+
+      PhotoDao photoDao = new PhotoDao();
+
+      System.out.println("Appel au servlet sendImage");
+      Genson genson = new Genson();
+      Map<String, String> map = genson.deserialize(req.getReader(), HashMap.class);
+      System.out.println(req.getReader());
+
+      String image = map.get("image");
+      String date_image = map.get("date_image");
+      System.out.println("Date image : " + date_image);
+      Date date = Date.valueOf(date_image);
+      photoDao.enregistrerPhoto(image, date);
+      String returnJson = "{\"success\":\"true\", \"message\":\"Image correctement enregistrée\"}";
+      System.out.println("JSON retourner: " + returnJson);
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_OK);
+      resp.getWriter().write(returnJson);
+    } catch (SQLException exception) {
+      exception.printStackTrace();
+      String json = "{\"success\":\"false\", \"error\":";
+      json += exception.getMessage();
+      json += "}";
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      resp.getWriter().write(json);
+    }
+
+  }
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    System.out.println("Appel au servlet sendImage");
+
+    try {
+      Genson genson = new Genson();
+
+      TypeAmenagementDTO tDto = new TypeAmenagementImpl();
+      TypeAmenagementDao tDao = new TypeAmenagementDaoImpl(tDto);
+
+      ArrayList<TypeAmenagementDTO> listAmenagement = tDao.getListeTypeAmenagement();
+
+      if (listAmenagement == null) {
+        System.out.println("erreur lors de la recuperation de la liste d'amenagement");
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      } else {
+        String json = genson.serialize(listAmenagement);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
+        System.out.println(json);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+
+    }
+
+  }
+}
+
+

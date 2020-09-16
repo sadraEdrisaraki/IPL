@@ -1,0 +1,93 @@
+/* mettre par défaut toutes les marges intérieures et extérieures à 0 */
+* { margin: 0; padding: 0; outline: 0;}
+
+
+/************************************************ Partie HEADER **********************************************************************/
+header {
+  margin: auto;
+  text-align:center;
+  background-color:grey;
+}
+
+header img {
+ margin : 10px;
+}
+
+header nav {
+	background-color:#494949;
+	height:50px;
+}
+
+header nav  li{
+	display:inline;
+	font-size:20px;
+	padding:20px;
+}
+
+header nav li a {
+	color:white;
+}
+
+header nav a:hover, nav a.current {
+	text-shadow: rgba(255,255,255,0.5) 1px 0px 1px; text-decoration: none; 
+	border: 1px solid #36b0d9; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; -o-border-radius: 10px; background:#F7E0AE;
+	text-decoration:underline;
+}
+
+
+/************************************************ Partie CENTRALE **********************************************************************/
+
+#mainSection {
+  margin:auto;
+  height:100%;
+}
+
+/* positionnement flex */
+#conteneur {
+  display:flex;
+  justify-content:space-between;
+
+}
+
+article {
+/*margin:10px;*/
+padding:10px;
+  width:28%;
+background:#F7E0AE;
+border: 1px solid ; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; -o-border-radius: 10px;
+}
+
+h4{
+text-decoration: underline;
+}
+
+ul {
+margin:10px;
+}
+
+
+/************************************************ Partie FOOTER **********************************************************************/
+footer {
+	height:50px;
+	background:#494949;
+	color:white;
+	text-align:center;
+	margin:auto;
+}
+
+footer p {
+	padding-top: 15px;
+}
+
+/************************************************ Partie Formulaire **********************************************************************/
+form {
+	margin:50px;
+}
+
+form * {
+	margin: 10px;
+}
+
+
+
+

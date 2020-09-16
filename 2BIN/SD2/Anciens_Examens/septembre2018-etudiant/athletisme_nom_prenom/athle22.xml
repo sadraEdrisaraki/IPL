@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE athletisme SYSTEM "athle.dtd" >
+<athletisme>
+  <discipline id="idvalue0" nomDiscipline="" type="course"/>
+  <club>
+    <athlete dateDeNaissance="" nom="">
+      <record discipline="idvalue0">record</record>
+    </athlete>
+  </club>
+</athletisme>

@@ -1,0 +1,76 @@
+package be.ipl.pae.main.api;
+
+
+import be.ipl.pae.main.biz.dto.DevisDto;
+import be.ipl.pae.main.ucc.DevisUcc;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.owlike.genson.Converter;
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+public class ListeDevisServlet extends HttpServlet {
+
+  @Inject
+  private DevisUcc devisUcc;
+
+
+  public ListeDevisServlet() {}
+
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    System.out.println("\nAppel au servlet ListeDevisClient");
+    String json = "";
+    DecodedJWT jwt;
+    Converter<Date> converter = ConverteurJson.getConverteurDateJson();
+
+    Genson genson =
+        new GensonBuilder().setSkipNull(true).withConverter(converter, Date.class).create();
+
+    try {
+      // Verification token
+      String token = req.getHeader("authorization");
+      jwt = Utils.verifyToken(token);
+      if (jwt == null) {
+        Utils.replyWithWrongTokenError(resp, token);
+        return;
+      }
+      // on creer le converter pour serialise les dates
+
+      ArrayList<DevisDto> listeDevis = devisUcc.getDevisClients();
+      System.out.println(listeDevis.get(0).toString());
+
+        json = genson.serialize(listeDevis);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
+        System.out.println(json);
+      }
+
+    }catch(
+
+  Exception exception)
+  {
+    exception.printStackTrace();
+    json = "{\"success\":\"false\", \"error\":";
+    json += exception.getMessage();
+    json += "}";
+    resp.setContentType("application/json");
+    resp.setCharacterEncoding("UTF-8");
+    resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    resp.getWriter().write(json);
+
+  }
+
+}}

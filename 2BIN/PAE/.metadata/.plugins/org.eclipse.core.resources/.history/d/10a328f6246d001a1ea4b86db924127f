@@ -1,0 +1,158 @@
+package be.ipl.pae.main.api;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.owlike.genson.Genson;
+import be.ipl.pae.main.biz.dto.ClientDTO;
+import be.ipl.pae.main.ucc.ClientUcc;
+
+public class IntroductionClientSerlvet extends HttpServlet {
+
+  private ClientUcc clientUcc;
+  private ClientDTO clientDto;
+
+  public IntroductionClientSerlvet(ClientUcc clientUcc, ClientDTO clientDto) {
+    this.clientUcc = clientUcc;
+    this.clientDto = clientDto;
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+
+    try {
+      System.out.println("Appel au servlet Introduction client");
+      // TODO : Verifier le token et que c'est la bonne personne qui fait l'appel (il n'y a que le
+      // patron qui peut introduire) --> requête BDD
+
+      // Verification token
+      String token = req.getHeader("authorization");
+      if (!Utils.verifyToken(token)) {
+        Utils.replyWithWrongTokenError(resp, token);
+        return; // stop la requête si token pas valable
+      }
+
+      Genson genson = new Genson();
+      Map<String, String> parametresRequete = genson.deserialize(req.getReader(), HashMap.class);
+
+      // Verification parametres cote API
+      String verification = checkParametres(parametresRequete);
+      if (verification != null) {
+        Utils.reply(resp, HttpServletResponse.SC_CONFLICT, verification, "erreur");
+      }
+
+      clientDto.setNom(parametresRequete.get("nom_client"));
+      clientDto.setPrenom(parametresRequete.get("prenom_client"));
+      clientDto.setRue(parametresRequete.get("rue"));
+      clientDto.setNumero(Integer.parseInt(parametresRequete.get("numero")));
+      clientDto.setCodePostal(Integer.parseInt(parametresRequete.get("code_postal")));
+      clientDto.setBoite(Integer.parseInt(parametresRequete.get("boite")));
+      clientDto.setVille(parametresRequete.get("ville"));
+      clientDto.setEmail(parametresRequete.get("email"));
+      clientDto.setTelephone(parametresRequete.get("telephone"));
+
+      System.out.println();
+
+
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
+  }
+
+  /**
+   * Methode qui verifie les parametres recu par le client. Les parametres doivent etre present et
+   * non vide
+   * 
+   * @param parametresRequete les parametres de la requete
+   * @return message d erreur si un parametre manque ou bien null dans le cas contraire
+   */
+  private String checkParametres(Map<String, String> parametresRequete) {
+
+    // nom
+    if (!parametresRequete.containsKey("nom_client")) {
+      return "nom manquant";
+    }
+    if (parametresRequete.get("nom_client").length() == 0) {
+      return "nom vide";
+    }
+
+    // prenom
+    if (!parametresRequete.containsKey("prenom_client")) {
+      return "prenom manquant";
+    }
+    if (parametresRequete.get("prenom_client").length() == 0) {
+      return "prenom vide";
+    }
+
+    // rue
+    if (!parametresRequete.containsKey("rue")) {
+      return "rue manquante";
+    }
+    if (parametresRequete.get("rue").length() == 0) {
+      return "rue vide";
+    }
+
+    // numero
+    if (!parametresRequete.containsKey("numero")) {
+      return "numero manquant";
+    }
+    if (parametresRequete.get("numero").length() == 0) {
+      return "numero vide";
+    }
+    if (!parametresRequete.get("numero").matches("[0-9]+")) {
+      return "numero doit contenir que des nombres";
+    }
+
+    // code_postal
+    if (!parametresRequete.containsKey("code_postal")) {
+      return "code postal manquant";
+    }
+    if (parametresRequete.get("code_postal").length() == 0) {
+      return "code postal vide";
+    }
+    if (!parametresRequete.get("code_postal").matches("[0-9]+")) {
+      return "code postal doit contenir que des nombres";
+    }
+
+    // boite
+    if (!parametresRequete.containsKey("boite")) {
+      return "boite manquant";
+    }
+    if (parametresRequete.get("boite").length() == 0) {
+      return "boite vide";
+    }
+
+    // ville
+    if (!parametresRequete.containsKey("ville")) {
+      return "ville manquant";
+    }
+    if (parametresRequete.get("ville").length() == 0) {
+      return "ville vide";
+    }
+
+    // email
+    if (!parametresRequete.containsKey("email")) {
+      return "email manquant";
+    }
+    if (parametresRequete.get("email").length() == 0) {
+      return "email vide";
+    }
+
+    // telephone
+    if (!parametresRequete.containsKey("telephone")) {
+      return "telephone manquant";
+    }
+    if (parametresRequete.get("telephone").length() == 0) {
+      return "telephone vide";
+    }
+
+    return null;
+  }
+
+
+}

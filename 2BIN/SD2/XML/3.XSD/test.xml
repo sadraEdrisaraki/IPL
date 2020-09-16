@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library SYSTEM "Exo2Library.dtd">
+<library>
+  <songlist>
+    <song>
+      <track_ID>0</track_ID>
+      <name>name</name>
+      <artist>artist</artist>
+      <album>album</album>
+      <genre>Hip hop</genre>
+      <comments author="">comments</comments>
+    </song>
+  </songlist>
+  <playlists>
+    <list name="idvalue0">
+      <track_ID>1</track_ID>
+    </list>
+  </playlists>
+</library>

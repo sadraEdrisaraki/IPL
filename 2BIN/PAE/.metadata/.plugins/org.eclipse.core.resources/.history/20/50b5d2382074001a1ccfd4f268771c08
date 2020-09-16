@@ -1,0 +1,36 @@
+package be.ipl.pae.main.api;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.owlike.genson.Genson;
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.ucc.ClientUcc;
+import config.Inject;
+
+public class ListeClientServlet extends HttpServlet {
+
+  @Inject
+  private ClientUcc clientUcc;
+
+  public ListeClientServlet() {}
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+    // Verifie l authorisation du client
+    String token = req.getHeader("authorization");
+    if (Utils.verifyToken(token) == null) {
+      Utils.replyWithWrongTokenError(resp, token);
+      return; // stop la requete si token pas valable
+    }
+
+    ArrayList<ClientDto> listeClient = clientUcc.getClientsSansUtilisateurs();
+    Genson genson = new Genson();
+    String json = genson.serialize(listeClient);
+    Utils.replyAsSuccess(resp, json, json);
+
+  }
+
+}

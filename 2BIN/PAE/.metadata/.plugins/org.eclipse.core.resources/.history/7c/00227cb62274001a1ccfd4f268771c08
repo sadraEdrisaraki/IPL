@@ -1,0 +1,13 @@
+
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.dto.PhotoDto;
+
+import java.sql.SQLException;
+
+
+public interface PhotoDao {
+
+  void enregistrerPhoto(PhotoDto photo);
+
+}

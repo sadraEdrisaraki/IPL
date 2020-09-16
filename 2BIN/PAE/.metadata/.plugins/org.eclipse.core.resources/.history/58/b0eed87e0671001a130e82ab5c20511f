@@ -1,0 +1,15 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.exception.InscriptionClientException;
+
+import java.util.ArrayList;
+
+public interface ClientDao {
+
+  ArrayList<ClientDto> getClients();
+
+  ClientDto inscrire(ClientDto clientDto) throws InscriptionClientException;
+  
+  ClientDto inscrireWithoutBoite(ClientDto clientDto) throws InscriptionClientException;
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="record">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]*.[0-9]{2}" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="athletisme">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="discipline" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="nomDiscipline" type="xs:string" use="required" />
+						<xs:attribute name="id" type="xs:ID" use="required" />
+						<xs:attribute name="type" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="course" />
+									<xs:enumeration value="lancer" />
+									<xs:enumeration value="saut" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="club">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="athlete" maxOccurs="unbounded"
+								minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="record" maxOccurs="unbounded"
+											minOccurs="0">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="record">
+														<xs:attribute name="discipline" type="xs:IDREF" use="required"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="nom" type="xs:string" use="required" />
+									<xs:attribute name="dateDeNaissance" type="xs:date" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

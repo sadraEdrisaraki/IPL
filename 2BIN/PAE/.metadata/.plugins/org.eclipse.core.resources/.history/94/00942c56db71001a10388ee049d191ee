@@ -1,0 +1,127 @@
+package be.ipl.pae.main.dao;
+
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.exception.FatalException;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import config.Inject;
+
+
+public class ClientDaoImpl implements ClientDao {
+
+  @Inject
+  private DalServices dalS;
+  @Inject
+  private BizFactory bizFactory;
+
+
+  public ClientDaoImpl() {}
+
+  @Override
+  public ArrayList<ClientDto> getClients() {
+
+    ArrayList<ClientDto> listeClients = new ArrayList<ClientDto>();
+
+    PreparedStatement ps = dalS.getPreparedStatement("SELECT * FROM clients");
+
+    try (ResultSet res = ps.executeQuery()) {
+      if (res.next()) {
+        ClientDto clientDto = bizFactory.getClient();
+        clientDto.setIdClient(res.getInt(1));
+        clientDto.setNom(res.getString(2));
+        clientDto.setPrenom(res.getString(3));
+        clientDto.setVille(res.getString(4));
+        clientDto.setCodePostal(res.getInt(5));
+        clientDto.setRue(res.getString(6));
+        clientDto.setNumero(res.getInt(7));
+        clientDto.setBoite(res.getString(8));
+        clientDto.setTelephone(res.getString(9));
+        clientDto.setEmail(res.getString(10));
+
+        listeClients.add(clientDto.clone());
+        return listeClients;
+      }
+
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+
+    return null;
+  }
+
+  @Override
+  public ClientDto inscrire(ClientDto clientDto) throws FatalException {
+    PreparedStatement ps = dalS.getPreparedStatement("INSERT INTO clients "
+        + "(nom, prenom, ville, code_postal, rue, numero, boite, email, telephone )"
+        + "VALUES(?,?,?,?,?,?,?,?,?) RETURNING id_client");
+
+    try {
+      ps.setString(1, clientDto.getNom());
+      ps.setString(2, clientDto.getPrenom());
+      ps.setString(3, clientDto.getVille());
+      ps.setInt(4, clientDto.getCodePostal());
+      ps.setString(5, clientDto.getRue());
+      ps.setInt(6, clientDto.getNumero());
+      ps.setString(7, clientDto.getBoite());
+      ps.setString(8, clientDto.getTelephone());
+      ps.setString(9, clientDto.getEmail());
+
+
+    } catch (SQLException excpetion) {
+      throw new FatalException("Preparation de la requete impossible");
+    }
+
+    // Execute la requete
+    try (ResultSet result = ps.executeQuery()) {
+      if (result.next()) {
+        clientDto.setIdClient(result.getInt(1));
+      }
+    } catch (SQLException excpetion) {
+      excpetion.printStackTrace();
+      throw new FatalException("Execution de la requete impossible");
+    }
+
+    return clientDto;
+  }
+
+  @Override
+  public ClientDto inscrireWithoutBoite(ClientDto clientDto) throws FatalException {
+    PreparedStatement ps = dalS.getPreparedStatement(
+        "INSERT INTO clients " + "(nom, prenom, ville, code_postal, rue, numero, email, telephone )"
+            + "VALUES(?,?,?,?,?,?,?,?) RETURNING id_client");
+
+    try {
+      ps.setString(1, clientDto.getNom());
+      ps.setString(2, clientDto.getPrenom());
+      ps.setString(3, clientDto.getVille());
+      ps.setInt(4, clientDto.getCodePostal());
+      ps.setString(5, clientDto.getRue());
+      ps.setInt(6, clientDto.getNumero());
+      ps.setString(7, clientDto.getTelephone());
+      ps.setString(8, clientDto.getEmail());
+
+
+    } catch (SQLException excpetion) {
+      throw new FatalException("Preparation de la requete impossible");
+    }
+
+    // Execute la requete
+    try (ResultSet result = ps.executeQuery()) {
+      if (result.next()) {
+        clientDto.setIdClient(result.getInt(1));
+      }
+    } catch (SQLException excpetion) {
+      excpetion.printStackTrace();
+      throw new FatalException("Execution de la requete impossible");
+    }
+
+    return clientDto;
+  }
+
+}

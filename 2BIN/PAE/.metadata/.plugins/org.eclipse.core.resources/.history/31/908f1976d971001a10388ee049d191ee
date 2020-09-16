@@ -1,0 +1,43 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.TypeAmenagementDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.dao.DalServivesDbManager;
+import be.ipl.pae.main.dao.TypeAmenagementDao;
+import be.ipl.pae.main.exception.DatabaseException;
+
+import java.util.ArrayList;
+
+import config.Inject;
+
+public class TypeAmenagementUccImpl implements TypeAmenagementUcc {
+
+  @Inject
+  private TypeAmenagementDao typeAmenagementDao;
+  @Inject
+  private BizFactory bizFactory;
+  @Inject
+  private DalServivesDbManager dalServices;
+
+
+  public TypeAmenagementUccImpl() {}
+
+  @Override
+  public ArrayList<TypeAmenagementDto> getListeAmenagement() {
+
+    ArrayList<TypeAmenagementDto> listeAmenagement;
+
+    try {
+      dalServices.startTransaction();
+      listeAmenagement = typeAmenagementDao.getListeTypeAmenagement();
+    } catch (DatabaseException exc) {
+      dalServices.rollback();
+      throw exc;
+    } finally {
+      dalServices.commit();
+    }
+
+    return listeAmenagement;
+  }
+
+}

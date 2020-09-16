@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Pipeline source="" target="" useEmbedded="false">
+<Attributes/>
+<Transforms>
+<Transform uriResolver="" url="file:/D:/Documents7/IPL/SD2/XML/RecettesXSLExo/recettes.xsl">
+<OutputProperties/>
+<Parameters/>
+</Transform>
+</Transforms>
+</Pipeline>

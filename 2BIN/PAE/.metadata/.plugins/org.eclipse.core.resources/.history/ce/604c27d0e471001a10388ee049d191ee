@@ -1,0 +1,48 @@
+package be.ipl.pae.main.dao;
+
+import be.ipl.pae.main.biz.dto.TypeAmenagementDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.exception.FatalException;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import config.Inject;
+
+public class TypeAmenagementDaoImpl implements TypeAmenagementDao {
+
+  @Inject
+  private DalServices dalServices;
+  @Inject
+  private BizFactory bizFactory;
+
+  public TypeAmenagementDaoImpl() {}
+
+  @Override
+  public ArrayList<TypeAmenagementDto> getListeTypeAmenagement() {
+
+    ArrayList<TypeAmenagementDto> listeAmen = new ArrayList<TypeAmenagementDto>();
+
+    PreparedStatement ps = dalServices
+        .getPreparedStatement("SELECT t.id_amenagement, t.nom FROM types_amenagements t");
+
+<<<<<<< HEAD
+    try (ResultSet res = ps.executeQuery()) {
+      TypeAmenagementDto typeAmenagement = bizFactory.getTypeAmenagement();
+      while (res.next()) {
+
+        typeAmenagement.setId_amenagement(res.getInt(1));
+        typeAmenagement.setNom(res.getString(2));
+        listeAmen.add(typeAmenagement.clone());
+      }
+
+      if (listeAmen.size() == 0)
+        return null;
+      return listeAmen;
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+  }
+}

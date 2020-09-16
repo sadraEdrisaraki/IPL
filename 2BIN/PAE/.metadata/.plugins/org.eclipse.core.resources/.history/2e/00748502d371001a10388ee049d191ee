@@ -1,0 +1,15 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.DevisDto;
+import be.ipl.pae.main.exception.ListeDevisNonPresentException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public interface DevisUcc {
+  ArrayList<DevisDto> getDevisClient(int idClient) throws ListeDevisNonPresentException;
+
+  ArrayList<DevisDto> getDevisClients() throws ListeDevisNonPresentException;
+
+  ArrayList<HashMap<String, String>> getDevisRealisation() throws ListeDevisNonPresentException;
+}

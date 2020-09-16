@@ -1,0 +1,24 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.PhotoDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.dao.PhotoDao;
+
+import java.sql.SQLException;
+
+import config.Inject;
+
+public class PhotoUccImpl implements PhotoUcc {
+
+  @Inject
+  private PhotoDao photoDao;
+  @Inject
+  private BizFactory bizFactory;
+
+
+  @Override
+  public void enregistrerPhoto(PhotoDto photo) throws SQLException {
+    photoDao.enregistrerPhoto(photo);
+  }
+
+}

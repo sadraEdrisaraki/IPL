@@ -1,0 +1,141 @@
+package be.ipl.pae.main.api;
+
+
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.ucc.ClientUcc;
+import be.ipl.pae.main.ucc.UtilisateurUcc;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.owlike.genson.Converter;
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import config.Inject;
+
+
+public class LierUtilisateurClient extends HttpServlet {
+
+  @Inject
+  private UtilisateurUcc utilisateurUcc;
+  @Inject
+  private ClientUcc clientUcc;
+
+  public LierUtilisateurClient() {}
+
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    System.out.println("\nAppel au servlet lier utilisateur \n");
+    String json = "";
+    Converter<Date> converteurDate = ConverteurJson.getConverteurDateJson();
+
+    Genson genson =
+        new GensonBuilder().setSkipNull(true).withConverter(converteurDate, Date.class).create();
+
+    DecodedJWT jwt = null;
+    try {
+      String token = req.getHeader("authorization");
+      jwt = Utils.verifyToken(token);
+      if (jwt == null) {
+        Utils.replyWithWrongTokenError(resp, token);
+        return;
+      }
+
+      ArrayList<UtilisateurDto> listeUtilisateur = utilisateurUcc.getUtilisateurs();// = //
+                                                                                    // utilisateurUcc.getUtilisateurs();
+      for (UtilisateurDto uti : listeUtilisateur) {
+
+        if (uti.getId_client() != 0) {
+          listeUtilisateur.remove(uti);
+        }
+      }
+
+      System.out.println(listeUtilisateur);
+
+      if (listeUtilisateur == null) {
+        System.out
+            .println("erreur lors de la recuperation de la liste des utilisateurs le servlet");
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      } else {
+        json += genson.serialize(listeUtilisateur);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
+        System.out.println(json);
+      }
+
+
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      json = "{\"success\":\"false\", \"error\":";
+      json += exception.getMessage();
+      json += "}";
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      resp.getWriter().write(json);
+      // TODO: handle exception
+    }
+
+  }
+
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    System.out.println("\nAppel au servlet Lier client utilisateur partie lier\n");
+    String json = "";
+    // on creer le converter pour serialise les dates
+    Converter<Date> converteurDate = ConverteurJson.getConverteurDateJson();
+
+    Genson genson =
+        new GensonBuilder().setSkipNull(true).withConverter(converteurDate, Date.class).create();
+    Map<String, Long> map = genson.deserialize(req.getReader(), HashMap.class);
+    System.out.println(map);
+    id_utilisateuraChange = map.get("id_utilisateur").intValue();
+    System.out.println(id_utilisateuraChange);
+    DecodedJWT jwt;
+    try {
+      // Verification token
+
+      String token = req.getHeader("authorization");
+      jwt = Utils.verifyToken(token);
+      ArrayList<ClientDto> listeClient = clientUcc.getClients();
+
+      if (listeClient == null) {
+        System.out
+            .println("erreur lors de la recuperation de la liste des utilisateurs le servlet");
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      } else {
+        json += genson.serialize(listeClient);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
+        System.out.println(json);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      json = "{\"success\":\"false\", \"error\":";
+      json += e.getMessage();
+      json += "}";
+      resp.setContentType("application/json");
+      resp.setCharacterEncoding("UTF-8");
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      resp.getWriter().write(json);
+
+      // TODO: handle exception
+    }
+  }
+
+
+}

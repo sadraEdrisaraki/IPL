@@ -1,0 +1,260 @@
+package be.ipl.pae.main.dao;
+
+import static utils.CheckUtils.checkObject;
+import static utils.CheckUtils.checkString;
+
+import be.ipl.pae.main.biz.TypeUtilisateurEnum;
+import be.ipl.pae.main.biz.dto.UtilisateurDto;
+import be.ipl.pae.main.biz.factory.BizFactory;
+import be.ipl.pae.main.exception.FatalException;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import config.Inject;
+
+
+public class UtilisateurDaoImpl implements UtilisateurDao {
+
+  @Inject
+  private DalServices dalS;
+  @Inject
+  private BizFactory bizFactory;
+
+  /**
+   * creer et recupere la connection et la factory.
+   */
+  public UtilisateurDaoImpl() {}
+
+  private UtilisateurDto setUtilisateurDto(int idUtilisateur, String nom, String prenom,
+      String ville, String email, String Pseudo, String motDePasse, TypeUtilisateurEnum type,
+      Timestamp date, int idClient) {
+
+    UtilisateurDto utilisateur = bizFactory.getUtilisateur();
+    utilisateur.setId_utilisateur(idUtilisateur);
+    utilisateur.setNom(nom);
+    utilisateur.setPrenom(prenom);
+    utilisateur.setVille(ville);
+    utilisateur.setEmail(email);
+    utilisateur.setPseudo(Pseudo);
+    utilisateur.setMot_de_passe(motDePasse);
+    utilisateur.setType(type);
+    utilisateur.setDate_inscription(date);
+    utilisateur.setId_client(idClient);
+    return utilisateur.clone();
+  }
+
+  @Override
+  public ArrayList<UtilisateurDto> getUtilisateurs() {
+
+    ArrayList<UtilisateurDto> listeUtilisateurs = new ArrayList<UtilisateurDto>();
+
+    PreparedStatement ps = dalS.getPreparedStatement("SELECT * FROM utilisateurs");
+
+    try (ResultSet res = ps.executeQuery()) {
+
+      while (res.next()) {
+        Timestamp date = res.getTimestamp(10);
+        TypeUtilisateurEnum type = TypeUtilisateurEnum.valueOf(res.getString(8));
+
+        listeUtilisateurs.add(
+            setUtilisateurDto(res.getInt(1), res.getString(2), res.getString(3), res.getString(4),
+                res.getString(5), res.getString(6), res.getString(7), type, date, res.getInt(9)));
+
+      }
+
+      return listeUtilisateurs;
+
+    } catch (SQLException exception) {
+      exception.printStackTrace();
+      System.out.println("Erreur dans getUtilisateur");
+    }
+
+    return null;
+  }
+
+  @Override
+  public String getUtilisateurMotDePasse(String pseudo) {
+    PreparedStatement ps =
+        dalS.getPreparedStatement("SELECT u.mot_de_passe FROM utilisateurs u WHERE u.pseudo=?");
+
+    try {
+      ps.setString(1, pseudo);
+      try (ResultSet res = ps.executeQuery()) {
+        if (res.next()) {
+          return res.getString(1);
+        }
+      } catch (SQLException exception) {
+        exception.printStackTrace();
+      }
+    } catch (SQLException exception) {
+      exception.printStackTrace();
+    }
+    return null;
+  }
+
+  @Override
+  public UtilisateurDto getUtilisateur(int idUtilisateur) throws FatalException {
+
+    PreparedStatement ps =
+        dalS.getPreparedStatement("SELECT u.id_utilisateur, u.nom, u.prenom, u.ville,"
+            + "u.email,u.pseudo, u.mot_de_passe, u.type,u.id_client, u.date_inscription "
+            + "FROM utilisateurs u WHERE u.id_utilisateur=?");
+
+    try {
+      ps.setInt(1, idUtilisateur);
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+
+    try (ResultSet res = ps.executeQuery()) {
+      if (res.next()) {
+        Timestamp date = res.getTimestamp(10);
+        TypeUtilisateurEnum type = TypeUtilisateurEnum.valueOf(res.getString(8));
+        return setUtilisateurDto(res.getInt(1), res.getString(2), res.getString(3),
+            res.getString(4), res.getString(5), res.getString(6), res.getString(7), type, date,
+            res.getInt(9));
+      }
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+    return null;
+  }
+
+  @Override
+  public UtilisateurDto getUtilisateur(String pseudo) {
+    PreparedStatement ps =
+        dalS.getPreparedStatement("SELECT u.id_utilisateur, u.nom,u.prenom,u.ville,"
+            + "u.email,u.pseudo,u.mot_de_passe,u.type,u.id_client,u.date_inscription "
+            + "FROM utilisateurs u WHERE u.pseudo=? ");
+    try {
+      ps.setString(1, pseudo);
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+    try (ResultSet res = ps.executeQuery()) {
+      if (res.next()) {
+
+        TypeUtilisateurEnum type = TypeUtilisateurEnum.valueOf(res.getString(8));
+        return setUtilisateurDto(res.getInt(1), res.getString(2), res.getString(3),
+            res.getString(4), res.getString(5), res.getString(6), res.getString(7), type,
+            res.getTimestamp(10), res.getInt(9));
+      }
+    } catch (SQLException exception) {
+      throw new FatalException(exception);
+    }
+    return null;
+  }
+
+  @Override
+  public boolean estCompteActivee(String pseudo) {
+    checkString(pseudo);
+    PreparedStatement ps = dalS.getPreparedStatement(
+        "SELECT u.id_utilisateur FROM utilisateurs u WHERE u.pseudo like ? AND u.id_client IS NOT NULL AND u.type NOT LIKE 'O'");
+
+    try {
+      ps.setString(1, pseudo);
+      try (ResultSet res = ps.executeQuery()) {
+        if (res.next()) {
+          return true;
+        }
+      } catch (SQLException exception) {
+        exception.printStackTrace();
+      }
+    } catch (SQLException sqlException) {
+      sqlException.printStackTrace();
+    }
+
+    return false;
+  }
+
+  @Override
+  public boolean deleteUtilisateur(int id) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean updateUtilisateur(UtilisateurDto utilisateur) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean lierCompteUtilisateurClient(int idClient, int utilisateur) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean pseudoEstUnique(String pseudo) {
+    checkString(pseudo);
+    PreparedStatement ps = dalS.getPreparedStatement(
+        "SELECT u.pseudo FROM utilisateurs u WHERE LOWER(u.pseudo) LIKE LOWER(?)");
+    try {
+      ps.setString(1, pseudo);
+      try (ResultSet res = ps.executeQuery()) {
+        if (res.next()) {
+          return false;
+        }
+      } catch (SQLException exception) {
+        exception.printStackTrace();
+      }
+    } catch (SQLException sqlException) {
+      sqlException.printStackTrace();
+    }
+    return true;
+  }
+
+  @Override
+  public boolean emailExistePas(String email) {
+    PreparedStatement ps = dalS.getPreparedStatement(
+        "SELECT u.email FROM utilisateurs u WHERE LOWER(u.email) LIKE LOWER(?)");
+    try {
+      ps.setString(1, email);
+      try (ResultSet res = ps.executeQuery()) {
+        if (res.next()) {
+          return false;
+        }
+      } catch (SQLException exception) {
+        exception.printStackTrace();
+      }
+    } catch (SQLException sqlException) {
+      sqlException.printStackTrace();
+    }
+    return true;
+  }
+
+  @Override
+  public UtilisateurDto inscrire(UtilisateurDto utilisateurDto) {
+    checkObject(utilisateurDto);
+    PreparedStatement ps = dalS.getPreparedStatement("INSERT INTO utilisateurs "
+        + "(nom, prenom, ville, email, pseudo ,mot_de_passe ,type ,date_inscription)"
+        + " VALUES(?,?,?,?,?,?,?,NOW()) RETURNING id_utilisateur");
+    try {
+      ps.setString(1, utilisateurDto.getNom());
+      ps.setString(2, utilisateurDto.getPrenom());
+      ps.setString(3, utilisateurDto.getVille());
+      ps.setString(4, utilisateurDto.getEmail());
+      ps.setString(5, utilisateurDto.getPseudo());
+      ps.setString(6, utilisateurDto.getMot_de_passe());
+      ps.setString(7, "C");
+      try (ResultSet res = ps.executeQuery()) {
+
+        // Rcupere l id lors de la creation et le renvoie
+        if (res.next()) {
+          utilisateurDto.setId_utilisateur(res.getInt(1));
+        }
+      } catch (SQLException exception) {
+        exception.printStackTrace();
+      }
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    }
+    System.out.println("inscription reussi");
+    return utilisateurDto;
+  }
+}

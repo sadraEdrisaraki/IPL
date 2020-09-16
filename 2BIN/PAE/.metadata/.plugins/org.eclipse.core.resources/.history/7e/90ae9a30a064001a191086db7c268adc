@@ -1,0 +1,22 @@
+package be.ipl.pae.main.biz.dto;
+
+import java.sql.Date;
+
+
+public interface PhotoDTO {
+
+  int getId_photo();
+
+  int getId_amenagement();
+
+  int getId_devis();
+
+  boolean isVisible();
+
+  void setVisible(boolean visible);
+
+  Date getDate_photo();
+
+  void setDate_photo(Date datePhoto);
+
+}

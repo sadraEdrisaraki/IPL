@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="idPlat">
+		<xs:restriction base="xs:ID">
+			<xs:pattern value="p[0-9]{3}" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="entree" />
+			<xs:enumeration value="principal" />
+			<xs:enumeration value="dessert" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="restaurant">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="client" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="nom" type="xs:string" use="required" />
+						<xs:attribute name="id" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:ID">
+									<xs:pattern value="cl[0-9]{4}" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="adresse" type="xs:string" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="carte">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="plat" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="prix" type="xs:positiveInteger"
+												use="required" />
+											<xs:attribute name="monnaie" type="xs:string"
+												fixed="EUR" />
+											<xs:attribute name="id" type="idPlat" use="required" />
+											<xs:attribute name="type" type="type" default="principal"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="commande" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ligneCommande" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="plat" type="xs:IDREF" use="required" />
+									<xs:attribute name="quantite" type="xs:positiveInteger" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="client" type="xs:IDREF" use="required" />
+						<xs:attribute name="date" type="xs:date" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

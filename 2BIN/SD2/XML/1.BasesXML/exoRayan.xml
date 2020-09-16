@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bibliotheque>
+	<livre ISBN="978-2-253-11118-4">
+		<Titre>Hygiène de l'assassin</Titre>
+		<Auteur>
+			<Nom>  Nothomb</Nom> 
+			<Prenom> Amélie </Prenom>
+		</Auteur>
+		
+	</livre>
+</bibliotheque>

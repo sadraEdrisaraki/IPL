@@ -1,0 +1,112 @@
+package be.ipl.pae.main.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import be.ipl.pae.main.api.InjectionService;
+
+public class DalService {
+
+  Connection conn;
+  private Map<QueryNamesEnum, PreparedStatement> psMap =
+      new HashMap<QueryNamesEnum, PreparedStatement>();
+
+
+  /**
+   * Initialise tous les preparedStatement necessaire.
+   */
+  public DalService() {
+    init_conn();
+    PreparedStatement ps;
+
+    try {
+      /******************** utilisateurs ******************************/
+      ps = conn.prepareStatement("SELECT u.mot_de_passe FROM utilisateurs u WHERE u.pseudo=?");
+      psMap.put(QueryNamesEnum.GET_MOT_DE_PASSE, ps);
+
+      ps = conn.prepareStatement("SELECT u.id_utilisateur, u.nom,u.prenom,u.ville,"
+          + "u.email,u.pseudo,u.mot_de_passe,u.type,u.id_client,u.date_inscription "
+          + "FROM utilisateurs u WHERE u.pseudo=? ");
+      psMap.put(QueryNamesEnum.GET_USER, ps);
+
+      ps = conn.prepareStatement(
+          "SELECT u.pseudo FROM utilisateurs u WHERE LOWER(u.pseudo) LIKE LOWER(?)");
+      psMap.put(QueryNamesEnum.GET_UNIQUE_PSEUDO, ps);
+
+      ps = conn.prepareStatement(
+          "SELECT u.email FROM utilisateurs u WHERE LOWER(u.email) LIKE LOWER(?)");
+      psMap.put(QueryNamesEnum.GET_UNIQUE_MAIL, ps);
+
+      ps = conn.prepareStatement("INSERT INTO utilisateurs "
+          + "(nom, prenom, ville, email, pseudo ,mot_de_passe ,type ,date_inscription)"
+          + " VALUES(?,?,?,?,?,?,?,NOW()) RETURNING id_utilisateur");
+      psMap.put(QueryNamesEnum.INSERT_UTILISATEUR, ps);
+
+      ps = conn.prepareStatement("SELECT * FROM utilisateurs");
+      psMap.put(QueryNamesEnum.GET_UTILISATEURS, ps);
+
+      ps = conn.prepareStatement(
+          "SELECT u.id_utilisateur FROM utilisateurs u WHERE u.pseudo like ? AND u.id_client IS NOT NULL AND u.type NOT LIKE 'O'");
+      psMap.put(QueryNamesEnum.IS_COMPTE_ACTIVEE, ps);
+      /******************** fin utilisateurs ******************************/
+
+      /******************** amengaments ***********************************/
+      ps = conn.prepareStatement(
+          "INSERT INTO photos (id_amenagement,id_devis,visibilite,date_photo,url_photo)"
+              + " VALUES(?,?,?,?,?) ");
+      psMap.put(QueryNamesEnum.INSERT_PHOTO, ps);
+
+      ps = conn.prepareStatement("SELECT t.id_amenagement , t.nom FROM types_amenagements t");
+      psMap.put(QueryNamesEnum.GET_LISTE_AMENAGEMENT, ps);
+      /******************** fin amengaments *************************************/
+
+      /******************** clients *********************************************/
+      ps = conn.prepareStatement("SELECT * FROM clients");
+      psMap.put(QueryNamesEnum.GET_CLIENTS, ps);
+
+      ps = conn.prepareStatement("INSERT INTO clients "
+          + "(nom, prenom, rue, numero, code postal, boite, ville, email, telephone )"
+          + "VALUES(?,?,?,?,?,?,?,?,?) RETURNING id_client");
+      /******************** fin clients *****************************************/
+
+      /******************** devis ***********************************************/
+      ps = conn.prepareStatement("SELECT * FROM devis d WHERE d.id_client=? ");
+      psMap.put(QueryNamesEnum.GET_DEVIS_CLIENT, ps);
+
+      ps = conn.prepareStatement("SELECT * FROM devis ");
+      psMap.put(QueryNamesEnum.GET_DEVIS, ps);
+      /******************** fin devis ***********************************************/
+
+
+    } catch (SQLException sqlException) {
+      System.out.println("Failed to construct PreparedStatement");
+      sqlException.printStackTrace();
+    }
+
+  }
+
+  public PreparedStatement getPreparedStatement(QueryNamesEnum query) {
+    return psMap.get(query);
+  }
+
+  private void init_conn() {
+    try {
+      Class.forName("org.postgresql.Driver");
+    } catch (ClassNotFoundException exception) {
+      System.out.println("Driver PostgreSQL not found");
+      System.exit(1);
+    }
+    String url = InjectionService.getPropsData("db_conn.properties", "url_db");
+    String pseudoDb = InjectionService.getPropsData("db_conn.properties", "pseudo_db");
+    String motDePasseDb = InjectionService.getPropsData("db_conn.properties", "mot_de_passe_db");
+    try {
+      conn = DriverManager.getConnection(url, pseudoDb, motDePasseDb);
+    } catch (SQLException exception) {
+      System.out.println("Impossible de se connecter");
+      System.exit(1);
+    }
+  }
+}

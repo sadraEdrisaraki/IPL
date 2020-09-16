@@ -1,0 +1,33 @@
+package be.ipl.pae.main.ucc;
+
+import java.util.ArrayList;
+import be.ipl.pae.main.api.InjectionService;
+import be.ipl.pae.main.biz.dto.ClientDTO;
+import be.ipl.pae.main.biz.factory.ClientFactory;
+import be.ipl.pae.main.dao.ClientDao;
+import be.ipl.pae.main.dao.ClientDaoImpl;
+
+public class ClientUccImpl implements ClientUcc {
+
+  private ClientDao clientDao;
+
+  private static ClientFactory factory =
+      InjectionService.getDependency(ClientFactory.class, "prod.properties");
+
+  public ClientUccImpl() {
+    this.clientDao = new ClientDaoImpl(factory.getClient());
+  }
+
+  @Override
+  public ArrayList<ClientDTO> getDevisClient() {
+    ArrayList<ClientDTO> listeClient = clientDao.getClients();
+
+    if (listeClient == null) {
+      System.out.println("pas de Client");
+      return null;
+    }
+    return listeClient;
+  }
+
+}
+

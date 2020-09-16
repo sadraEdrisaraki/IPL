@@ -1,0 +1,64 @@
+package be.ipl.pae.main.dao;
+
+
+import static utils.CheckUtils.checkObject;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import be.ipl.pae.main.biz.dto.ClientDTO;
+
+public class ClientDaoImpl implements ClientDao {
+  private DalService dalS;
+  private ClientDTO clientDto;
+
+  /**
+   * Constructeur cree le dalService.
+   */
+  public ClientDaoImpl(ClientDTO clientDto) {
+    this.dalS = new DalService();
+    this.clientDto = clientDto;
+
+  }
+
+  @Override
+  public ArrayList<ClientDTO> getClients() {
+    ArrayList<ClientDTO> listeClients = new ArrayList<ClientDTO>();
+    PreparedStatement ps = dalS.getPreparedStatement(QueryNamesEnum.GET_CLIENTS);
+    try {
+      ResultSet res = ps.executeQuery();
+      if (res.next()) {
+        clientDto.setIdClient(res.getInt(1));
+        clientDto.setNom(res.getString(2));
+        clientDto.setPrenom(res.getString(3));
+        clientDto.setVille(res.getString(4));
+        clientDto.setCodePostal(res.getInt(5));
+        clientDto.setRue(res.getString(6));
+        clientDto.setNumero(res.getInt(7));
+        clientDto.setBoite(res.getInt(8));
+        clientDto.setTelephone(res.getString(9));
+        clientDto.setEmail(res.getString(10));
+
+        listeClients.add(clientDto.clone());
+        return listeClients;
+      }
+
+    } catch (SQLException exception) {
+      exception.printStackTrace();
+      System.out.println("Erreur dans getUtilisateur");
+    }
+
+    return null;
+  }
+
+  @Override
+  public ClientDTO inscrire(ClientDTO clientDto) {
+    checkObject(clientDto); // si l'objet est vide est ce qu'il remonte les appels pour afficher
+                            // l'erreur dans le servelt et est ce que le servlet catch l'erreur ? 
+    
+
+
+    return null;
+  }
+
+}

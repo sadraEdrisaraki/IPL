@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT athletisme (discipline+,club)>
+
+<!ELEMENT discipline EMPTY>
+<!ATTLIST discipline nomDiscipline CDATA #REQUIRED>
+<!ATTLIST discipline id ID #REQUIRED>
+<!ATTLIST discipline type (course|lance|saut) #REQUIRED>
+
+<!ELEMENT club (athlete?)>
+<!ELEMENT athlete (record)>
+<!ATTLIST athlete nom CDATA #REQUIRED>
+<!ATTLIST athlete dateDeNaissance CDATA #IMPLIED>

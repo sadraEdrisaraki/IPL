@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE restaurant SYSTEM "restaurant.dtd" >
+<restaurant> <!-- element racine du document -->
+  <client id="cl0001" nom="Damas"/>
+  <client id="cl0002" nom="Leconte"/>
+  <carte>
+    <plat id="p001" prix="1">Pizza Hawaii</plat>
+  </carte>
+  <commande client="cl0001" date="2017-05-27">
+    <ligneCommande plat="p001" quantite="1"/>
+  </commande>
+  <commande client="cl0002" date="2017-05-29">
+    <ligneCommande plat="p001" quantite="1"/>
+  </commande>
+</restaurant>

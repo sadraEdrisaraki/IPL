@@ -1,0 +1,14 @@
+package be.ipl.pae.main.ucc;
+
+import be.ipl.pae.main.biz.dto.ClientDto;
+import be.ipl.pae.main.dao.ClientDao;
+
+import java.util.ArrayList;
+
+public interface ClientUcc {
+  ArrayList<ClientDto> getClients();
+
+  ClientDto inscrire(ClientDto clientDto);
+
+  void setDao(ClientDao cDao);
+}

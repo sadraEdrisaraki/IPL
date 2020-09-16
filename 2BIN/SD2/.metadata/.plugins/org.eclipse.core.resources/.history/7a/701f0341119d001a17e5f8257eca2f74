@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE restaurant SYSTEM "restaurant.dtd" >
+<restaurant>
+  <client adresse="" id="idvalue0" nom=""/>
+  <carte>
+    <plat id="idvalue1" monnaie="EUR" prix="" type="principal"/>
+  </carte>
+  <commande client="idvalue0" date="">
+    <ligneCommande plat="idvalue0"/>
+  </commande>
+</restaurant>

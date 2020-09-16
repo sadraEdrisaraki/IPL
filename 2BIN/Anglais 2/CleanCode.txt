@@ -1,0 +1,18 @@
+Ma définition d'un code clean:
+-don't be fast when you add a feature. If you are fast you gonna create a messy code. Over the time the mess becomes so big and so deep, you can not clean it up. 
+	It's why you need to take ur time.
+-Meaningful names : Names are everywhere in sofware. We name our varibales, our functions our arguments, classes, packages and so on. The name is 90% of the code. 
+	You should use intention revealing names. If a name requires a comment, then the name does not reveal its intent. Also use prononceable names; if you can't pronounce it,
+	you can't discuss it. This matters because programming is a social activity. For the classe don't choice a verb. Classes should have noun.  But for method name you can choice a verb.
+
+- If you want to comment our code you can with a well-placed comment. Nothing can clutter-up(encombrer) you code more than comments. So don't comment all your code.
+- Split your classes, functions.. it's important to have small fonctions, classes
+
+
+Run All the tests: 
+Refactoring : 
+	No duplication : Dusplication is the primary enemy of a well designed system. Creating a clean system requires th will to eliminate duplication.
+	Expressive : code should clearly expresse the intent of the author. You can express yourself by choosing good names.
+		You can also express yourself by keeping your functions and classes small.
+		You can also express yourself by using standard nomenclature.
+	Minimal classes and Methods : This rule suggests that we also keep our functions and class counts low.
